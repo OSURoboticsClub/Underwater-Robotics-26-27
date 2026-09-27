@@ -37,7 +37,7 @@ trap cleanup EXIT INT TERM
 
 xterm -T "ROV Remote Launch" -e bash -lc "
 ssh -t ROV '
-source ~/Underwater-Robotics-24-25/ros_setup.sh
+source ~/Underwater-Robotics-Current/ros_setup.sh
 ros2 launch rov_ctrl_sys launch_rov.launch.py
 '
 " &
@@ -46,7 +46,7 @@ REMOTE_PID=$!
 sleep 1
 
 xterm -T "ROV Local Launch" -e bash -lc '
-source ~/Underwater-Robotics-24-25/ros_setup.sh
+source ~/Underwater-Robotics-Current/ros_setup.sh
 ros2 launch rov_ctrl_sys launch_ground.launch.py
 ' &
 LOCAL_PID=$!

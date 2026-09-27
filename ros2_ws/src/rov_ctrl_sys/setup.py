@@ -35,7 +35,7 @@ setup(
             'motor_controller = rov_ctrl_sys.motor_controller:main',
             'crab_detect = rov_ctrl_sys.crab_detect:main',
             'window = rov_ctrl_sys.window:main',
-            'calibrate_motors = rov_ctrl_sys.calibrate_motors:main',
+#             'calibrate_motors = rov_ctrl_sys.calibrate_motors:main',
         ],
     },
 )

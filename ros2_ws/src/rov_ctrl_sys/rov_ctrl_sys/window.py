@@ -68,7 +68,7 @@ class Window(Node):
         self.front_idx = 0
         self.new_frame = False
         self.img_lock = threading.Lock()
-        self.img_dir = str(pathlib.Path.home()) + '/Underwater-Robotics-24-25/crab_detect/rov_photos/'
+        self.img_dir = str(pathlib.Path.home()) + '/Underwater-Robotics-Current/crab_detect/rov_photos/'
         self.img_num = 1
 
         self.held_keys = set()

@@ -34,7 +34,7 @@ class CrabDetect(SubscriberPublisher):
         self.detect_lock = threading.Lock()
         self.p_pressed = False
 
-        self.crab_path = str(pathlib.Path.home()) + '/Underwater-Robotics-24-25/crab_detect/'
+        self.crab_path = str(pathlib.Path.home()) + '/Underwater-Robotics-Current/crab_detect/'
         self.model_path = self.crab_path + 'best_lightblur.pt'
         self.model_trained = YOLO(self.model_path)
         self.model_trained.to('cpu')
