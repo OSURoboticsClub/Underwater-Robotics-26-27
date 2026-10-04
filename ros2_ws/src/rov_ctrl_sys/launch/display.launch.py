@@ -42,7 +42,7 @@ def generate_launch_description():
             PathJoinSubstitution([params_dir, 'camera_shared.yaml']),
         ],
         remappings=[
-            ('image_raw','image_processed'),
+            ('image_raw','image_uncompressed'),
         ],
 #         ros_arguments=['--log-level', 'debug'],
     )
@@ -70,15 +70,15 @@ def generate_launch_description():
             ],
             output='log'
         ),
-        Node(
-            package='rov_ctrl_sys',
-            executable='crab_detect',
-            name='crab_detect',
-            remappings=[
-                ('image_raw', 'image_uncompressed'),
-            ],
-            output='log',
-        ),
+#         Node(
+#             package='rov_ctrl_sys',
+#             executable='crab_detect',
+#             name='crab_detect',
+#             remappings=[
+#                 ('image_raw', 'image_uncompressed'),
+#             ],
+#             output='log',
+#         ),
         RegisterEventHandler(
             OnProcessExit(
                 target_action=display_node,
