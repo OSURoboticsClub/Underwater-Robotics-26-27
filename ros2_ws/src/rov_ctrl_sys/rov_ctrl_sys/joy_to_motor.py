@@ -47,6 +47,10 @@ class JoyToMotor(SubscriberPublisher):
         self.lateral = {'lfl', 'lfr', 'lbl', 'lbr'}
         self.vertical = {'vfl', 'vfr', 'vbl', 'vbr'}
 
+        self.lateral_timer = None
+        self.vertical_timer = None
+        self.timer_delay = 1.0
+
         self.declare_parameter('allow_rolling', True)
         self.allow_rolling = self.get_parameter('allow_rolling').value
 
@@ -164,6 +168,26 @@ class JoyToMotor(SubscriberPublisher):
                 self.get_logger().info(f'Set {p.name} to: {float(p.value)}')
 
         return SetParametersResult(successful=True)
+
+    def gen_lateral_timer(self, cmds):
+        msg = String()
+        msg.data = ','.join(f'{k}={v}' for k,v in cmds.items())
+        def temp():
+            self.publisher_.publish(msg)
+            self.get_logger().info('Executing lateral timer')
+#             self.lateral_timer.cancel()
+#             self.lateral_timer = None
+        return temp
+
+    def gen_vertical_timer(self, cmds):
+        msg = String()
+        msg.data = ','.join(f'{k}={v}' for k,v in cmds.items())
+        def temp():
+            self.publisher_.publish(msg)
+            self.get_logger().info('Executing vertical timer')
+#             self.vertical_timer.cancel()
+#             self.vertical_timer = None
+        return temp
 
     # msg has an axes array of length 8
     # msg.axes[0] left stick X: 1=left, -1=right
@@ -304,6 +328,33 @@ class JoyToMotor(SubscriberPublisher):
             new_msg = String()
             new_msg.data = ','.join(f'{k}={v}' for k,v in self.commands.items())
             self.get_logger().info(f"motor_commands: {new_msg.data}")
+
+            lateral_commands = {k: self.commands[k] for k in self.commands if k in self.lateral}
+            if len(lateral_commands) > 0 and self.lateral_timer:
+                self.lateral_timer.cancel()
+                self.lateral_timer = None
+                self.get_logger().info('Cancelled lateral timer')
+                pass
+            lateral_commands = {k: v for k,v in lateral_commands.items() if v == 1500}
+            if len(lateral_commands) == 4:
+                self.lateral_timer = self.create_timer(self.timer_delay, 
+                        self.gen_lateral_timer(lateral_commands))
+                self.get_logger().info('Scheduled lateral timer')
+                pass
+
+            vertical_commands = {k: self.commands[k] for k in self.commands if k in self.vertical}
+            if len(vertical_commands) > 0 and self.vertical_timer:
+                self.vertical_timer.cancel()
+                self.vertical_timer = None
+                self.get_logger().info('Cancelled vertical timer')
+                pass
+            vertical_commands = {k: v for k,v in vertical_commands.items() if v == 1500}
+            if len(vertical_commands) == 4:
+                self.vertical_timer = self.create_timer(self.timer_delay, 
+                        self.gen_vertical_timer(vertical_commands))
+                self.get_logger().info('Scheduled vertical timer')
+                pass
+
             return new_msg
         else:
             return None

@@ -9,7 +9,7 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='rov_ctrl_sys',
-            executable='joy_to_motor_unstick',
+            executable='joy_to_motor',
             name='joy_to_motor',
             output='log',
 #             ros_arguments=['--log-level', 'debug'],

@@ -11,7 +11,6 @@
   <depend>rcl_interfaces</depend>
   <depend>usb_cam</depend>
   <depend>python3-pygame</depend>
-  <depend>python3-ultralytics-pip</depend>
   <depend>python3-serial</depend>
 
   <exec_depend>launch_ros</exec_depend>
