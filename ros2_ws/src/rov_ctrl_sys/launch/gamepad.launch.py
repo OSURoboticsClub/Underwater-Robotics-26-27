@@ -16,7 +16,16 @@ def generate_launch_description():
             parameters=[
                 PathJoinSubstitution([params_dir, 'motors.yaml']),
             ],
-#             ros_arguments=['--params-file', PathJoinSubstitution([params_dir, 'motors.yaml'])],
+        ),
+        Node(
+            package='rov_ctrl_sys',
+            executable='thruster_allocator',
+            name='thruster_allocator',
+            output='log',
+#             ros_arguments=['--log-level', 'debug'],
+            parameters=[
+                PathJoinSubstitution([params_dir, 'motors.yaml']),
+            ],
         ),
         Node(
             package='rov_ctrl_sys',

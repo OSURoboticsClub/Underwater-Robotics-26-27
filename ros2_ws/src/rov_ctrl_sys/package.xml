@@ -9,6 +9,8 @@
 
   <depend>rclpy</depend>
   <depend>rcl_interfaces</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
   <depend>usb_cam</depend>
   <depend>python3-pygame</depend>
   <depend>python3-serial</depend>

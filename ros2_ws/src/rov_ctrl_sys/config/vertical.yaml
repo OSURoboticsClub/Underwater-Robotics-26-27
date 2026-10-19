@@ -1,54 +1,64 @@
 /ground/joy_to_motor:
   ros__parameters:
     allow_rolling: true
+    frame_id: base_link
     lateral_cap: 0.75
-    lbl_mod_neg: 1.0
-    lbl_mod_pos: 1.0
-    lbr_mod_neg: 1.0
-    lbr_mod_pos: 1.0
-    lfl_mod_neg: 1.0
-    lfl_mod_pos: 1.0
-    lfr_mod_neg: 1.0
-    lfr_mod_pos: 1.0
-    neg_mod: 1.0
-    pitch_mod: 1.0
-    pitch_vbl: 1.0
-    pitch_vbr: 1.0
-    pitch_vfl: 1.0
-    pitch_vfr: 1.0
-    roll_mod: 1.0
-    roll_vbl: 1.0
-    roll_vbr: 1.0
-    roll_vfl: 1.0
-    roll_vfr: 1.0
-    use_sim_time: false
-    vbl_mod_neg: 1.0
-    vbl_mod_pos: 0.825
-    vbr_mod_neg: 0.65
-    vbr_mod_pos: 1.0
     vertical_cap: 1.0
-    vfl_mod_neg: 1.0
-    vfl_mod_pos: 0.8
-    vfr_mod_neg: 0.6
-    vfr_mod_pos: 1.0
-    x_lbl: 1.0
-    x_lbr: 1.0
-    x_lfl: 1.0
-    x_lfr: 1.0
     x_mod: 1.0
     y_mod: 1.0
-    y_vbl: 1.0
-    y_vbr: 1.0
-    y_vfl: 1.0
-    y_vfr: 1.0
-    yaw_lbl: 1.0
-    yaw_lbr: 1.0
-    yaw_lfl: 1.0
-    yaw_lfr: 1.0
+    z_mod: 1.0
+    pitch_mod: 1.0
     yaw_mod: 1.0
-    z_lbl: 1.0
-    z_lbr: 1.0
+    roll_mod: 1.0
+    use_sim_time: false
+
+/ground/thruster_allocator:
+  ros__parameters:
+    lateral_cap: 0.75
+    vertical_cap: 1.0
+    neg_mod: 1.0
+    # Per-motor positive / negative modifiers
+    lfl_mod_pos: 1.0
+    lfl_mod_neg: 1.0
+    lfr_mod_pos: 1.0
+    lfr_mod_neg: 1.0
+    lbl_mod_pos: 1.0
+    lbl_mod_neg: 1.0
+    lbr_mod_pos: 1.0
+    lbr_mod_neg: 1.0
+    # Tuned vertical motor modifiers
+    vfl_mod_pos: 0.8
+    vfl_mod_neg: 1.0
+    vfr_mod_pos: 1.0
+    vfr_mod_neg: 0.6
+    vbl_mod_pos: 0.825
+    vbl_mod_neg: 1.0
+    vbr_mod_pos: 1.0
+    vbr_mod_neg: 0.65
+    # Mixing matrix weights — lateral
+    x_lfl: 1.0
+    x_lfr: 1.0
+    x_lbl: 1.0
+    x_lbr: 1.0
     z_lfl: 1.0
     z_lfr: 1.0
-    z_mod: 1.0
-
+    z_lbl: 1.0
+    z_lbr: 1.0
+    yaw_lfl: 1.0
+    yaw_lfr: 1.0
+    yaw_lbl: 1.0
+    yaw_lbr: 1.0
+    # Mixing matrix weights — vertical
+    y_vfl: 1.0
+    y_vfr: 1.0
+    y_vbl: 1.0
+    y_vbr: 1.0
+    pitch_vfl: 1.0
+    pitch_vfr: 1.0
+    pitch_vbl: 1.0
+    pitch_vbr: 1.0
+    roll_vfl: 1.0
+    roll_vfr: 1.0
+    roll_vbl: 1.0
+    roll_vbr: 1.0
+    use_sim_time: false
