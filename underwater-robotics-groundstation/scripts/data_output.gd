@@ -9,7 +9,7 @@ func _ready() -> void:
 func process_data(data: Dictionary[String, Variant]) -> void:
 	"""#try out this
 	for key, value in user_profile.items():
-    	print(f"Key: {key} -> Value: {value}")
+		print(f"Key: {key} -> Value: {value}")
 	"""
 	if data.get("camera_x") != null:
 		print("updating data")
