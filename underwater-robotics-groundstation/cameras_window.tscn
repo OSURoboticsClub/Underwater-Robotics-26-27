@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://c3c0akohdf2d"]
+
+[ext_resource type="Texture2D" uid="uid://mpdvnw42w1pv" path="res://icon.svg" id="1_gw7co"]
+
+[node name="CamerasWindow" type="Control" unique_id=1540963881]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1614489595]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="GridContainer" unique_id=1956241043]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_gw7co")
+stretch_mode = 5
+
+[node name="TextureRect2" type="TextureRect" parent="GridContainer" unique_id=2020811283]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_gw7co")
+stretch_mode = 5
+
+[node name="TextureRect3" type="TextureRect" parent="GridContainer" unique_id=777309632]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_gw7co")
+stretch_mode = 5
+
+[node name="TextureRect4" type="TextureRect" parent="GridContainer" unique_id=1705125781]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_gw7co")
+stretch_mode = 5
+
+[node name="TextureRect5" type="TextureRect" parent="GridContainer" unique_id=1019520281]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_gw7co")
+stretch_mode = 5

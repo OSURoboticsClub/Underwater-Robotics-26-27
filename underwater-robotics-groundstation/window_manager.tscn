@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://8damggiflm3d"]
+
+[ext_resource type="PackedScene" uid="uid://c3c0akohdf2d" path="res://cameras_window.tscn" id="1_0wm0m"]
+[ext_resource type="Script" uid="uid://bflj5d2det3a5" path="res://scripts/window_manager.gd" id="1_rcf65"]
+[ext_resource type="PackedScene" uid="uid://lf0ilpmjflxk" path="res://main_window.tscn" id="2_rcf65"]
+[ext_resource type="Script" uid="uid://b4ih1hp687t71" path="res://ros_interface.gd" id="4_t1ppw"]
+
+[node name="WindowManager" type="Node" unique_id=1788609934]
+script = ExtResource("1_rcf65")
+
+[node name="MainWindow" parent="." unique_id=1708160728 instance=ExtResource("2_rcf65")]
+
+[node name="Window" type="Window" parent="." unique_id=85284666]
+oversampling_override = 1.0
+title = "Cameras Window"
+position = Vector2i(0, 36)
+size = Vector2i(1920, 1080)
+visible = false
+
+[node name="CamerasWindow" parent="Window" unique_id=1540963881 instance=ExtResource("1_0wm0m")]
+
+[node name="RosInterface" type="RosNode" parent="." unique_id=659947262]
+script = ExtResource("4_t1ppw")

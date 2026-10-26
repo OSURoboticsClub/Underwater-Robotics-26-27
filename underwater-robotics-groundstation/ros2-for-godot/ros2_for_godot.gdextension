@@ -1,0 +1,12 @@
+[configuration]
+
+entry_symbol = "ros2_for_godot_init"
+compatibility_minimum = "4.2"
+
+[libraries]
+
+linux.debug.x86_64 = "res://bin/libros2_for_godot.so"
+linux.release.x86_64 = "res://bin/libros2_for_godot.so"
+linux.debug.arm64 = "res://bin/libros2_for_godot.so"
+linux.release.arm64 = "res://bin/libros2_for_godot.so"
+

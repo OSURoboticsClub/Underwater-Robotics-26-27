@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://2gita0c1pvb"]
+
+[ext_resource type="Script" uid="uid://4vmdst4ql8ii" path="res://scripts/input_remaping.gd" id="1_mkjtm"]
+
+[node name="InputRemaping" type="Control" unique_id=986189276]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mkjtm")
+
+[node name="Panel" type="Panel" parent="." unique_id=1510877059]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inputs" type="VBoxContainer" parent="Panel" unique_id=18536113]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/Inputs" unique_id=2143680201]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Remap Inputs"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Inputs" unique_id=1385230694]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Inputs/HBoxContainer" unique_id=1065506987]
+layout_mode = 2
+text = "Close"
+
+[node name="Button" type="Button" parent="Panel/Inputs/HBoxContainer" unique_id=521715614]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Remap"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Inputs" unique_id=221456551]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Inputs/HBoxContainer2" unique_id=2065991781]
+layout_mode = 2
+text = "Crab detect"
+
+[node name="Button" type="Button" parent="Panel/Inputs/HBoxContainer2" unique_id=77593514]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Remap"

@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://lf0ilpmjflxk"]
+
+[ext_resource type="Texture2D" uid="uid://mpdvnw42w1pv" path="res://icon.svg" id="1_n7l54"]
+[ext_resource type="Script" uid="uid://232kvhi7lju8" path="res://scripts/camera_feed.gd" id="2_bfu0d"]
+[ext_resource type="Script" uid="uid://dx2uoi8i3470r" path="res://scripts/data_output.gd" id="2_l06f4"]
+[ext_resource type="Script" uid="uid://dcrno2c2e8ena" path="res://scripts/error_output.gd" id="3_sq7ho"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kk4qh"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_l0yk3"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_o4j38"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_61srk"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_afgc5"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_qr07w"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_nlft0"]
+line_spacing = -6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_88qfr"]
+line_spacing = -6.0
+
+[node name="MainWindow" type="Control" unique_id=1708160728]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Camera Feed" type="TextureRect" parent="." unique_id=1586419186]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1408.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("1_n7l54")
+stretch_mode = 5
+script = ExtResource("2_bfu0d")
+
+[node name="Panel" type="Panel" parent="." unique_id=1712242976]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+
+[node name="InfoVBox" type="VBoxContainer" parent="Panel" unique_id=219596801]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Panel/InfoVBox" unique_id=961857519]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ROV Control"
+horizontal_alignment = 1
+
+[node name="Data" type="Label" parent="Panel/InfoVBox" unique_id=278785453]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "lfl: 1500
+lfr: 1500
+lbl: 1500
+lbr: 1500
+vfl: 1500
+vfr: 1500
+vbl: 1500
+vbr: 1500
+manip: 0.0
+manip_rotate: 1500
+dome_lights: 0.0
+ext_lights: 0.0
+camera_y: 1500
+preassure_sensor: 1500
+esp2_sensor: 1500"
+
+[node name="DataOutput" type="VBoxContainer" parent="Panel/InfoVBox" unique_id=2087478429]
+layout_mode = 2
+script = ExtResource("2_l06f4")
+
+[node name="camera_x" type="Label" parent="Panel/InfoVBox/DataOutput" unique_id=1936491898]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Camera X: 1500"
+
+[node name="ROVDisplay" type="HBoxContainer" parent="Panel/InfoVBox" unique_id=717106469]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 127
+
+[node name="Left" type="VBoxContainer" parent="Panel/InfoVBox/ROVDisplay" unique_id=524970458]
+layout_mode = 2
+theme_override_constants/separation = -3
+
+[node name="Label" type="Label" parent="Panel/InfoVBox/ROVDisplay/Left" unique_id=1729001950]
+layout_mode = 2
+text = "      _______
+    /           /
+  /    19   /
+/_______/"
+label_settings = SubResource("LabelSettings_kk4qh")
+
+[node name="Label2" type="Label" parent="Panel/InfoVBox/ROVDisplay/Left" unique_id=605612367]
+layout_mode = 2
+text = " _______
+|          |
+|   17  |
+|______|"
+label_settings = SubResource("LabelSettings_l0yk3")
+
+[node name="Label3" type="Label" parent="Panel/InfoVBox/ROVDisplay/Left" unique_id=635481166]
+layout_mode = 2
+text = " _______
+|          |
+|   04  |
+|______|"
+label_settings = SubResource("LabelSettings_o4j38")
+
+[node name="Label4" type="Label" parent="Panel/InfoVBox/ROVDisplay/Left" unique_id=1817936084]
+layout_mode = 2
+text = "________
+\\           \\
+  \\    14   \\
+    \\_______\\"
+label_settings = SubResource("LabelSettings_61srk")
+
+[node name="Right" type="VBoxContainer" parent="Panel/InfoVBox/ROVDisplay" unique_id=463502404]
+layout_mode = 2
+theme_override_constants/separation = -3
+
+[node name="Label" type="Label" parent="Panel/InfoVBox/ROVDisplay/Right" unique_id=1237626418]
+layout_mode = 2
+text = "________
+\\           \\
+  \\    18   \\
+    \\_______\\"
+label_settings = SubResource("LabelSettings_afgc5")
+
+[node name="Label2" type="Label" parent="Panel/InfoVBox/ROVDisplay/Right" unique_id=613317402]
+layout_mode = 2
+text = "      _______
+     |          |
+     |   16  |
+     |______|"
+label_settings = SubResource("LabelSettings_qr07w")
+
+[node name="Label3" type="Label" parent="Panel/InfoVBox/ROVDisplay/Right" unique_id=2039283184]
+layout_mode = 2
+text = "      _______
+     |          |
+     |   13  |
+     |______|"
+label_settings = SubResource("LabelSettings_nlft0")
+
+[node name="Label4" type="Label" parent="Panel/InfoVBox/ROVDisplay/Right" unique_id=173096926]
+layout_mode = 2
+text = "      _______
+    /           /
+  /    27   /
+/_______/"
+label_settings = SubResource("LabelSettings_88qfr")
+
+[node name="ErrorScrolling" type="ScrollContainer" parent="Panel/InfoVBox" unique_id=2026053639]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Errors" type="VBoxContainer" parent="Panel/InfoVBox/ErrorScrolling" unique_id=1846108422]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_sq7ho")
+error_color = Color(0.83137256, 0, 0, 1)
