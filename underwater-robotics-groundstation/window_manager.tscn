@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c3c0akohdf2d" path="res://cameras_window.tscn" id="1_0wm0m"]
 [ext_resource type="Script" uid="uid://bflj5d2det3a5" path="res://scripts/window_manager.gd" id="1_rcf65"]
 [ext_resource type="PackedScene" uid="uid://lf0ilpmjflxk" path="res://main_window.tscn" id="2_rcf65"]
-[ext_resource type="Script" uid="uid://b4ih1hp687t71" path="res://ros_interface.gd" id="4_t1ppw"]
+[ext_resource type="Script" uid="uid://b4ih1hp687t71" path="res://scripts/ros_interface.gd" id="4_t1ppw"]
 
 [node name="WindowManager" type="Node" unique_id=1788609934]
 script = ExtResource("1_rcf65")

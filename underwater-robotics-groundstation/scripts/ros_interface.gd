@@ -6,12 +6,14 @@ var joy_publisher: RosPublisher
 
 var video_subscription: RosSubscription
 
+var last_physics_time_usec: int = 0
+
 #func _enter_tree() -> void:
 #	ros_node_name = "godot_test"
 #	pass
 
 func _ready():
-	ros_node_name = "godot_test" # Setting node name doesnt work.
+	ros_node_name = "groundstation" # Setting node name doesnt work.
 	await get_tree().process_frame
 
 	subscription = create_subscription(
@@ -59,18 +61,36 @@ func _ready():
 		print("Publisher created: ", joy_publisher)
 
 	
+func _process(_delta: float) -> void:
+	var now := Time.get_ticks_usec()
 
-func _physics_process(_delta):
+	if last_physics_time_usec != 0:
+		var interval_ms := (
+			now - last_physics_time_usec
+		) / 1000.0
+
+		if interval_ms > 30.0:
+			print("Physics interval: ", interval_ms, " ms")
+
+	last_physics_time_usec = now
+
+	var spin_start_usec := Time.get_ticks_usec()
 	spin_some()
-	
+	var spin_duration_ms := (
+		Time.get_ticks_usec() - spin_start_usec
+	) / 1000.0
+
+	if spin_duration_ms > 5.0:
+		print("spin_some duration: ", spin_duration_ms, " ms")
+
 	if Input.is_key_pressed(KEY_P):
 		SignalBus.error.emit("New Test Error")
-	
+
 	if Input.is_action_pressed("up"):
-		print("Sending message")
 		var msg = RosMsg.create("std_msgs/msg/String")
 		msg.data = "UP"
 		key_states_publisher.publish(msg)
+
 	#list of keys the are used in other nodes:
 	# C - camera
 	# D
@@ -94,9 +114,7 @@ func _physics_process(_delta):
 
 func _on_message_received(msg):
 	print("RECEIVED MESSAGE: ", msg.data)
-	var data: Dictionary[String,Variant] = {
-		"test": 1234
-	}
+	var data: Dictionary[String,Variant] = {}
 	var pieces_of_data = msg.data.split(",")
 	for d in pieces_of_data:
 		var data_parts = d.split("=")
@@ -107,66 +125,4 @@ func _on_message_received(msg):
 
 
 func _handle_image(msg) -> void:
-	#var texture = create_camera_texture(msg)
-	#SignalBus.incoming_video.emit(create_camera_texture(msg))
 	SignalBus.incoming_video.emit(msg)
-
-func convert_ros_image(msg) -> Image:
-	var width: int = msg.width
-	var height: int = msg.height
-	var encoding: String = msg.encoding
-	var data: PackedByteArray = msg.data
-
-	if width <= 0 or height <= 0:
-		push_warning("Invalid camera image dimensions")
-		return null
-
-	if encoding != "rgb8" and encoding != "bgr8":
-		push_warning("Unsupported image encoding: " + encoding)
-		return null
-
-	var expected_size: int = width * height * 3
-
-	if data.size() < expected_size:
-		push_warning("Camera image data is smaller than expected")
-		return null
-
-	if encoding == "bgr8":
-		data = data.duplicate()
-
-		for i in range(0, expected_size, 3):
-			var temp: int = data[i]
-			data[i] = data[i + 2]
-			data[i + 2] = temp
-
-	var image := Image.create_from_data(
-		width,
-		height,
-		false,
-		Image.FORMAT_RGB8,
-		data
-	)
-
-	return image
-
-func create_camera_texture(msg) -> ImageTexture:
-	var image: Image = convert_ros_image(msg)
-
-	if image == null:
-		SignalBus.error.emit("After converting from ros to image: its null")
-		return null
-
-	var texture := ImageTexture.create_from_image(image)
-
-	return texture
-
-
-#Ideas
-# Global Signalbus
-# - sends out a signal with name and value
-# - example camera_x, 1440
-# Scenes can subscribe and then process the name to see
-# if they use it.
-
-# Or, each one has its own signal that gets sent, but
-# that might be too much
