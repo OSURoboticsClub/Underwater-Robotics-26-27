@@ -1,21 +1,25 @@
 extends VBoxContainer
 
+@onready var lfl := $"ROVDisplay/Left/lfl"
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	SignalBus.incoming_data.connect(process_data)
 
-
 func process_data(data: Dictionary[String, Variant]) -> void:
-	"""#try out this
-	for key, value in user_profile.items():
-		print(f"Key: {key} -> Value: {value}")
-	"""
-	if data.get("camera_x") != null:
-		print("updating data")
-		var label = get_node("camera_x")
-		label.text = "Camera X: " + str(data["camera_x"])
-		#can i dynamically see what data was given and then for each of those 
-		# get its label and update it
-	else:
-		print("no good data")
+	#print("-----Updating data-----")
+	for key in data:
+		#print("Key: " + key + " -> Value: " + data[key])
+		var label: DataLabel = get_node(key)
+		if not label:
+			SignalBus.error.emit("Failed to find label for: " + key)
+		else:
+			label.set_data(data[key])
+			"""if key == "lfl":
+				if int(data[key]) > 1500:
+					lfl.add_theme_color_override("font_color", Color.RED)
+				elif int(data[key]) < 1500:
+					lfl.add_theme_color_override("font_color", Color.GREEN)
+				else:
+					lfl.add_theme_color_override("font_color", Color.WHITE)
+			
+		"""
