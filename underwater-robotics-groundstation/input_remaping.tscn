@@ -58,4 +58,5 @@ text = "Reset to Defaults"
 
 [node name="StatusLabel" type="Label" parent="." unique_id=1572718914]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Project default keybinds are active."

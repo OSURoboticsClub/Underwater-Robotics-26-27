@@ -1,5 +1,9 @@
 extends TextureRect
 
+@onready var visible_button := $"MarginContainer/ToggleFeedButton"
+
+var feed_visible = true
+
 var camera_texture: ImageTexture
 
 var thread: Thread
@@ -28,9 +32,17 @@ func _ready() -> void:
 
 	SignalBus.incoming_video.connect(on_incoming_video_signal)
 	thread.start(_thread_loop)
+	
+	visible_button.pressed.connect(toggle_feed)
+
+func toggle_feed () -> void:
+	feed_visible = !feed_visible
 
 
 func on_incoming_video_signal(image_msg) -> void:
+	if not feed_visible:
+		#TODO: set a default texture or instead layer them so the default is always there hidden behind the feed
+		return
 	var now := Time.get_ticks_usec()
 
 	"""if last_callback_time_usec != 0:
@@ -68,13 +80,13 @@ func on_incoming_video_signal(image_msg) -> void:
 
 func _process(_delta: float) -> void:
 	var image_to_display: Image = null
-	var image_ready_time: int = 0
+	#var image_ready_time: int = 0
 
 	mutex.lock()
 
 	if has_ready_image:
 		image_to_display = ready_image
-		image_ready_time = ready_image_time_usec
+		#image_ready_time = ready_image_time_usec
 
 		ready_image = null
 		ready_image_time_usec = 0
@@ -154,7 +166,7 @@ func _update_display_texture(new_image: Image) -> void:
 
 	last_display_time_usec = now
 
-	var start_time := Time.get_ticks_usec()
+	#var start_time := Time.get_ticks_usec()
 
 	if camera_texture == null:
 		camera_texture = ImageTexture.create_from_image(new_image)

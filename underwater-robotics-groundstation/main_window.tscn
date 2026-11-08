@@ -7,8 +7,6 @@
 [ext_resource type="Script" uid="uid://dcrno2c2e8ena" path="res://scripts/error_display.gd" id="3_sq7ho"]
 [ext_resource type="Script" uid="uid://beyxydrdclx5o" path="res://scripts/lights_control.gd" id="4_5y2nw"]
 [ext_resource type="PackedScene" uid="uid://2gita0c1pvb" path="res://input_remaping.tscn" id="5_1rr46"]
-[ext_resource type="Theme" uid="uid://w8gxfnwaa2sp" path="res://main_theme.tres" id="6_iwhwg"]
-[ext_resource type="Script" uid="uid://dg6gi1ooo4o10" path="res://scripts/vertical_speed.gd" id="7_guodr"]
 [ext_resource type="Script" uid="uid://cj71gqcmb0822" path="res://scripts/vertical_movement.gd" id="8_eqarp"]
 [ext_resource type="Texture2D" uid="uid://85iqfubh7f8i" path="res://visibility_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="11_0oce6"]
 [ext_resource type="Texture2D" uid="uid://h23ut7vjrkcb" path="res://visibility_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="12_o2qoy"]
@@ -36,18 +34,6 @@ line_spacing = -6.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_88qfr"]
 line_spacing = -6.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guodr"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0.6)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1rr46"]
 content_margin_left = 2.0
@@ -236,6 +222,7 @@ start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel9" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=464201702]
+visible = false
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Left Vertical"
@@ -244,6 +231,7 @@ start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel10" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1165701359]
+visible = false
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Right Vertical"
@@ -252,6 +240,7 @@ start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel11" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1025666816]
+visible = false
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Left Vertical"
@@ -260,6 +249,7 @@ start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel12" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=197201087]
+visible = false
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Right Vertical"
@@ -267,17 +257,17 @@ data_name = "vbr"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="ROVDisplay" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox" unique_id=717106469]
+[node name="ROVDisplay" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=717106469]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 127
 
-[node name="Left" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay" unique_id=524970458]
+[node name="Left" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=524970458]
 layout_mode = 2
 theme_override_constants/separation = -3
 
-[node name="lfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Left" unique_id=1729001950]
+[node name="lfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1729001950]
 layout_mode = 2
 text = "      _______
     /           /
@@ -285,7 +275,7 @@ text = "      _______
 /_______/"
 label_settings = SubResource("LabelSettings_kk4qh")
 
-[node name="vfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Left" unique_id=605612367]
+[node name="vfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=605612367]
 layout_mode = 2
 text = " _______
 |          |
@@ -293,7 +283,7 @@ text = " _______
 |______|"
 label_settings = SubResource("LabelSettings_l0yk3")
 
-[node name="vbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Left" unique_id=635481166]
+[node name="vbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=635481166]
 layout_mode = 2
 text = " _______
 |          |
@@ -301,7 +291,7 @@ text = " _______
 |______|"
 label_settings = SubResource("LabelSettings_o4j38")
 
-[node name="lbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Left" unique_id=1817936084]
+[node name="lbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1817936084]
 layout_mode = 2
 text = "________
 \\           \\
@@ -309,11 +299,11 @@ text = "________
     \\_______\\"
 label_settings = SubResource("LabelSettings_61srk")
 
-[node name="Right" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay" unique_id=463502404]
+[node name="Right" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=463502404]
 layout_mode = 2
 theme_override_constants/separation = -3
 
-[node name="lfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Right" unique_id=1237626418]
+[node name="lfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=1237626418]
 layout_mode = 2
 text = "________
 \\           \\
@@ -321,7 +311,7 @@ text = "________
     \\_______\\"
 label_settings = SubResource("LabelSettings_afgc5")
 
-[node name="vfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Right" unique_id=613317402]
+[node name="vfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=613317402]
 layout_mode = 2
 text = "      _______
      |          |
@@ -329,7 +319,7 @@ text = "      _______
      |______|"
 label_settings = SubResource("LabelSettings_qr07w")
 
-[node name="vbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Right" unique_id=2039283184]
+[node name="vbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=2039283184]
 layout_mode = 2
 text = "      _______
      |          |
@@ -337,7 +327,7 @@ text = "      _______
      |______|"
 label_settings = SubResource("LabelSettings_nlft0")
 
-[node name="lbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ROVDisplay/Right" unique_id=173096926]
+[node name="lbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=173096926]
 layout_mode = 2
 text = "      _______
     /           /
@@ -450,7 +440,7 @@ expand_mode = 2
 stretch_mode = 5
 script = ExtResource("2_bfu0d")
 
-[node name="TextureButton" type="TextureButton" parent="HBoxContainer/Control/Camera Feed" unique_id=1018116020]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/Camera Feed" unique_id=642287454]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -458,9 +448,18 @@ anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 40.0
 grow_horizontal = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ToggleFeedButton" type="TextureButton" parent="HBoxContainer/Control/Camera Feed/MarginContainer" unique_id=1018116020]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
 toggle_mode = true
 texture_normal = ExtResource("11_0oce6")
 texture_pressed = ExtResource("12_o2qoy")
+stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control" unique_id=1103546871]
 layout_mode = 1
@@ -470,18 +469,6 @@ offset_right = 16.0
 grow_vertical = 2
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_bottom = 12
-
-[node name="VSlider" type="VSlider" parent="HBoxContainer/Control/MarginContainer" unique_id=484113188]
-visible = false
-layout_mode = 2
-theme = ExtResource("6_iwhwg")
-theme_override_styles/slider = SubResource("StyleBoxFlat_guodr")
-min_value = 1125.0
-max_value = 1875.0
-value = 1500.0
-editable = false
-scrollable = false
-script = ExtResource("7_guodr")
 
 [node name="VerticalVelocity" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer" unique_id=1368037531]
 layout_mode = 2

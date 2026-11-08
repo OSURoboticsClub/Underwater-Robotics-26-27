@@ -15,11 +15,6 @@ func _ready() -> void:
 	dome_slider.drag_ended.connect(update_brightness)
 	
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
 # this is only triggered by a mouse click, not toggling in code.
 func toggle_exterior():
 	var output : Dictionary[String, Variant] = {}

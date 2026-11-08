@@ -1,15 +1,44 @@
 [gd_resource type="Theme" format=3 uid="uid://w8gxfnwaa2sp"]
 
-[ext_resource type="StyleBox" uid="uid://b6wypypsjq0ub" path="res://slider_background.tres" id="1_470mv"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gsqoc"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.4627451, 0.023529412, 0.4)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_470mv"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.4627451, 0.023529412, 0.7490196)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a2l2q"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gsqoc"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
 
 [resource]
+CheckButton/colors/button_checked_color = Color(1, 0.4627451, 0.023529412, 1)
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_gsqoc")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_470mv")
+HSlider/styles/slider = SubResource("StyleBoxFlat_a2l2q")
 Label/font_sizes/font_size = 24
-VSlider/styles/grabber_area = SubResource("StyleBoxFlat_a2l2q")
-VSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_gsqoc")
-VSlider/styles/slider = ExtResource("1_470mv")
