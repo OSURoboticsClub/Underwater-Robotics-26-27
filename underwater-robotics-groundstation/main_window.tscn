@@ -6,9 +6,12 @@
 [ext_resource type="Script" uid="uid://dx2uoi8i3470r" path="res://scripts/data_output.gd" id="2_l06f4"]
 [ext_resource type="Script" uid="uid://dcrno2c2e8ena" path="res://scripts/error_display.gd" id="3_sq7ho"]
 [ext_resource type="Script" uid="uid://beyxydrdclx5o" path="res://scripts/lights_control.gd" id="4_5y2nw"]
+[ext_resource type="PackedScene" uid="uid://2gita0c1pvb" path="res://input_remaping.tscn" id="5_1rr46"]
 [ext_resource type="Theme" uid="uid://w8gxfnwaa2sp" path="res://main_theme.tres" id="6_iwhwg"]
 [ext_resource type="Script" uid="uid://dg6gi1ooo4o10" path="res://scripts/vertical_speed.gd" id="7_guodr"]
 [ext_resource type="Script" uid="uid://cj71gqcmb0822" path="res://scripts/vertical_movement.gd" id="8_eqarp"]
+[ext_resource type="Texture2D" uid="uid://85iqfubh7f8i" path="res://visibility_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="11_0oce6"]
+[ext_resource type="Texture2D" uid="uid://h23ut7vjrkcb" path="res://visibility_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="12_o2qoy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_kk4qh"]
 line_spacing = -6.0
@@ -114,10 +117,9 @@ theme_override_constants/margin_bottom = 8
 [node name="TabContainer" type="TabContainer" parent="HBoxContainer/MarginContainer" unique_id=1011071868]
 layout_mode = 2
 size_flags_vertical = 0
-current_tab = 1
+current_tab = 0
 
 [node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=219596801]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -355,6 +357,7 @@ script = ExtResource("3_sq7ho")
 error_color = Color(0.83137256, 0, 0, 1)
 
 [node name="Lights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=791987815]
+visible = false
 layout_mode = 2
 script = ExtResource("4_5y2nw")
 metadata/_tab_index = 1
@@ -420,6 +423,11 @@ tick_count = 10
 ticks_on_borders = true
 ticks_position = 3
 
+[node name="Inputs" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=18536113 instance=ExtResource("5_1rr46")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
 [node name="CenterContainer" type="CenterContainer" parent="HBoxContainer" unique_id=739006746]
 visible = false
 custom_minimum_size = Vector2(300, 0)
@@ -441,6 +449,18 @@ texture = ExtResource("1_n7l54")
 expand_mode = 2
 stretch_mode = 5
 script = ExtResource("2_bfu0d")
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer/Control/Camera Feed" unique_id=1018116020]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+toggle_mode = true
+texture_normal = ExtResource("11_0oce6")
+texture_pressed = ExtResource("12_o2qoy")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control" unique_id=1103546871]
 layout_mode = 1

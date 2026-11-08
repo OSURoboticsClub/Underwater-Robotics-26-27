@@ -2,61 +2,60 @@
 
 [ext_resource type="Script" uid="uid://4vmdst4ql8ii" path="res://scripts/input_remaping.gd" id="1_mkjtm"]
 
-[node name="InputRemaping" type="Control" unique_id=986189276]
-layout_mode = 3
+[node name="Inputs" type="VBoxContainer" unique_id=18536113]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 8
 script = ExtResource("1_mkjtm")
 
-[node name="Panel" type="Panel" parent="." unique_id=1510877059]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Inputs" type="VBoxContainer" parent="Panel" unique_id=18536113]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="Panel/Inputs" unique_id=2143680201]
+[node name="Label" type="Label" parent="." unique_id=2143680201]
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "Remap Inputs"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Inputs" unique_id=1385230694]
-visible = false
+[node name="ActionScroll" type="ScrollContainer" parent="." unique_id=1639792542]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionList" type="VBoxContainer" parent="ActionScroll" unique_id=1455968621]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProfileControls" type="VBoxContainer" parent="." unique_id=1634639890]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/Inputs/HBoxContainer" unique_id=1065506987]
-layout_mode = 2
-text = "Close"
-
-[node name="Button" type="Button" parent="Panel/Inputs/HBoxContainer" unique_id=521715614]
-layout_mode = 2
-size_flags_horizontal = 10
-text = "Remap"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Inputs" unique_id=221456551]
-visible = false
+[node name="SaveRow" type="HBoxContainer" parent="ProfileControls" unique_id=1047423228]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/Inputs/HBoxContainer2" unique_id=2065991781]
+[node name="ProfileNameInput" type="LineEdit" parent="ProfileControls/SaveRow" unique_id=730327320]
 layout_mode = 2
-text = "Crab detect"
+size_flags_horizontal = 3
+placeholder_text = "Mapping name"
 
-[node name="Button" type="Button" parent="Panel/Inputs/HBoxContainer2" unique_id=77593514]
+[node name="SaveButton" type="Button" parent="ProfileControls/SaveRow" unique_id=2028482527]
 layout_mode = 2
-size_flags_horizontal = 10
-text = "Remap"
+text = "Save"
+
+[node name="LoadRow" type="HBoxContainer" parent="ProfileControls" unique_id=826652712]
+layout_mode = 2
+
+[node name="SavedProfiles" type="OptionButton" parent="ProfileControls/LoadRow" unique_id=2034729552]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LoadButton" type="Button" parent="ProfileControls/LoadRow" unique_id=730156869]
+layout_mode = 2
+text = "Load"
+
+[node name="ResetButton" type="Button" parent="." unique_id=149399519]
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="StatusLabel" type="Label" parent="." unique_id=1572718914]
+layout_mode = 2
+text = "Project default keybinds are active."
