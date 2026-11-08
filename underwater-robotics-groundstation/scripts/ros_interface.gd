@@ -1,6 +1,7 @@
 extends RosNode
 
 var key_states_publisher: RosPublisher
+var servo_publisher: RosPublisher
 
 var motor_subscription: RosSubscription
 var servo_subscription: RosSubscription
@@ -72,8 +73,20 @@ func _ready():
 	else:
 		print("Publisher created: ", key_states_publisher)
 	
-
+	servo_publisher = create_publisher( #TODO: This needs to actually go to /gound/joy - joy_to_servo
+		"std_msgs/msg/String",
+		"/servo_command",
+		10
+	)
+	if servo_subscription == null:
+		SignalBus.error.emit("Failed to create publisher to '/servo_command'")
+	else:
+		print("Publisher created: ", servo_subscription)
 	
+	SignalBus.outgoing_data.connect(_publish_data)
+
+
+
 func _process(_delta: float) -> void:
 	#var now := Time.get_ticks_usec()
 
@@ -161,3 +174,14 @@ func _on_message_received(msg):
 
 func _handle_image(msg) -> void:
 	SignalBus.incoming_video.emit(msg)
+
+
+func _publish_data(pub_name: String, data: Dictionary[String, Variant]):
+	if pub_name == "servo":
+		var output = []
+		for key in data:
+			output.append(key + ":" + str(data[key]))
+		var msg = RosMsg.create("std_msgs/msg/String")
+		msg.data = ",".join(output)
+		servo_publisher.publish(msg)
+	pass

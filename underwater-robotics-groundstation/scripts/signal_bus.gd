@@ -13,3 +13,7 @@ signal incoming_video(image_data)
 ## And it dispalys it in the running UI.
 @warning_ignore("unused_signal")
 signal error(error_text: String)
+
+
+@warning_ignore("unused_signal")
+signal outgoing_data(pub_name: String, data: Dictionary[String, Variant])

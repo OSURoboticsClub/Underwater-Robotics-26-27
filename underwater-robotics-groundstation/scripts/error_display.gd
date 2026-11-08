@@ -20,6 +20,7 @@ func _add_error(e:String) -> void:
 	label.add_theme_color_override("font_color", error_color)
 	add_child(label)
 	_scroll_to_bottom()
+	_limit_size()
 
 ## Scroll to the bottom of the list to show newest errors.
 func _scroll_to_bottom():

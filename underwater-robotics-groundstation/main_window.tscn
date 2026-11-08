@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://cjwllhvtvf7fv" path="res://scripts/data_label.gd" id="2_iwhwg"]
 [ext_resource type="Script" uid="uid://dx2uoi8i3470r" path="res://scripts/data_output.gd" id="2_l06f4"]
 [ext_resource type="Script" uid="uid://dcrno2c2e8ena" path="res://scripts/error_display.gd" id="3_sq7ho"]
+[ext_resource type="Script" uid="uid://beyxydrdclx5o" path="res://scripts/lights_control.gd" id="4_5y2nw"]
 [ext_resource type="Theme" uid="uid://w8gxfnwaa2sp" path="res://main_theme.tres" id="6_iwhwg"]
 [ext_resource type="Script" uid="uid://dg6gi1ooo4o10" path="res://scripts/vertical_speed.gd" id="7_guodr"]
 [ext_resource type="Script" uid="uid://cj71gqcmb0822" path="res://scripts/vertical_movement.gd" id="8_eqarp"]
@@ -113,9 +114,10 @@ theme_override_constants/margin_bottom = 8
 [node name="TabContainer" type="TabContainer" parent="HBoxContainer/MarginContainer" unique_id=1011071868]
 layout_mode = 2
 size_flags_vertical = 0
-current_tab = 0
+current_tab = 1
 
 [node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=219596801]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -352,14 +354,71 @@ size_flags_vertical = 3
 script = ExtResource("3_sq7ho")
 error_color = Color(0.83137256, 0, 0, 1)
 
-[node name="Other" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=791987815]
-visible = false
+[node name="Lights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=791987815]
 layout_mode = 2
+script = ExtResource("4_5y2nw")
 metadata/_tab_index = 1
 
-[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Other" unique_id=68914568]
+[node name="ExteriorLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights" unique_id=1844807636]
 layout_mode = 2
-text = "Title"
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=1736801829]
+layout_mode = 2
+text = "Exterior Lights"
+
+[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=1542853486]
+layout_mode = 2
+disabled = true
+text = "Enabled"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=935678711]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights/HBoxContainer" unique_id=382243942]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Brightness"
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights/HBoxContainer" unique_id=343189596]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
+
+[node name="DomeLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights" unique_id=1059527269]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=983793355]
+layout_mode = 2
+text = "
+Dome Lights"
+
+[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=1784918180]
+layout_mode = 2
+disabled = true
+text = "Enabled"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=725897867]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights/HBoxContainer" unique_id=689523432]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Brightness"
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights/HBoxContainer" unique_id=1346901933]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="HBoxContainer" unique_id=739006746]
 visible = false

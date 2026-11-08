@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-@onready var lfl := $"ROVDisplay/Left/lfl"
+#@onready var lfl := $"ROVDisplay/Left/lfl"
 
 func _ready() -> void:
 	SignalBus.incoming_data.connect(process_data)
@@ -9,8 +9,8 @@ func process_data(data: Dictionary[String, Variant]) -> void:
 	#print("-----Updating data-----")
 	for key in data:
 		#print("Key: " + key + " -> Value: " + data[key])
-		var label: DataLabel = get_node(key)
-		if not label:
+		var label: DataLabel = get_node_or_null(key)
+		if label == null:
 			SignalBus.error.emit("Failed to find label for: " + key)
 		else:
 			label.set_data(data[key])
