@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://c3c0akohdf2d"]
 
 [ext_resource type="Texture2D" uid="uid://mpdvnw42w1pv" path="res://icon.svg" id="1_gw7co"]
+[ext_resource type="Texture2D" uid="uid://85iqfubh7f8i" path="res://visibility_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="2_xpuue"]
+[ext_resource type="Texture2D" uid="uid://h23ut7vjrkcb" path="res://visibility_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="3_syfcf"]
 
 [node name="CamerasWindow" type="Control" unique_id=1540963881]
 layout_mode = 3
@@ -25,6 +27,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource("1_gw7co")
 stretch_mode = 5
+
+[node name="TextureButton" type="TextureButton" parent="GridContainer/TextureRect" unique_id=903503601]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+toggle_mode = true
+texture_normal = ExtResource("2_xpuue")
+texture_pressed = ExtResource("3_syfcf")
 
 [node name="TextureRect2" type="TextureRect" parent="GridContainer" unique_id=2020811283]
 layout_mode = 2

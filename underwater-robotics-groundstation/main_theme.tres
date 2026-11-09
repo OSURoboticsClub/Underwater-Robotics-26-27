@@ -1,0 +1,15 @@
+[gd_resource type="Theme" format=3 uid="uid://w8gxfnwaa2sp"]
+
+[ext_resource type="StyleBox" uid="uid://b6wypypsjq0ub" path="res://slider_background.tres" id="1_470mv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a2l2q"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gsqoc"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[resource]
+Label/font_sizes/font_size = 24
+VSlider/styles/grabber_area = SubResource("StyleBoxFlat_a2l2q")
+VSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_gsqoc")
+VSlider/styles/slider = ExtResource("1_470mv")

@@ -33,7 +33,7 @@ func _ready() -> void:
 func on_incoming_video_signal(image_msg) -> void:
 	var now := Time.get_ticks_usec()
 
-	if last_callback_time_usec != 0:
+	"""if last_callback_time_usec != 0:
 		var interval_ms := (
 			now - last_callback_time_usec
 		) / 1000.0
@@ -41,7 +41,7 @@ func on_incoming_video_signal(image_msg) -> void:
 		if interval_ms > 100.0:
 			print("ROS callback interval: ", interval_ms, " ms")
 
-	last_callback_time_usec = now
+	last_callback_time_usec = now"""
 
 	if image_msg == null:
 		SignalBus.error.emit("An image was not supplied")
@@ -83,12 +83,12 @@ func _process(_delta: float) -> void:
 	mutex.unlock()
 
 	if image_to_display != null:
-		var wait_ms := (
+		"""var wait_ms := (
 			Time.get_ticks_usec() - image_ready_time
 		) / 1000.0
 
 		if wait_ms > 20.0:
-			print("Image buffer wait: ", wait_ms, " ms")
+			print("Image buffer wait: ", wait_ms, " ms")"""
 
 		_update_display_texture(image_to_display)
 
@@ -115,7 +115,7 @@ func _thread_loop() -> void:
 		if current_frame.is_empty():
 			continue
 
-		var start_time := Time.get_ticks_usec()
+		#var start_time := Time.get_ticks_usec()
 
 		var local_image := Image.create_from_data(
 			current_frame["width"],
@@ -125,11 +125,11 @@ func _thread_loop() -> void:
 			current_frame["data"]
 		)
 
-		var elapsed_ms := (
+		"""var elapsed_ms := (
 			Time.get_ticks_usec() - start_time
-		) / 1000.0
+		) / 1000.0"""
 
-		print("Image processing: ", elapsed_ms, " ms")
+		#print("Image processing: ", elapsed_ms, " ms")
 
 		mutex.lock()
 
@@ -144,13 +144,13 @@ func _thread_loop() -> void:
 func _update_display_texture(new_image: Image) -> void:
 	var now := Time.get_ticks_usec()
 
-	if last_display_time_usec != 0:
+	"""if last_display_time_usec != 0:
 		var interval_ms := (
 			now - last_display_time_usec
-		) / 1000.0
+		) / 1000.0"""
 
-		if interval_ms > 100.0:
-			print("Texture update interval: ", interval_ms, " ms")
+		#if interval_ms > 100.0:
+		#	print("Texture update interval: ", interval_ms, " ms")
 
 	last_display_time_usec = now
 
@@ -162,13 +162,12 @@ func _update_display_texture(new_image: Image) -> void:
 	else:
 		camera_texture.update(new_image)
 
-	var elapsed_ms := (
+	"""var elapsed_ms := (
 		Time.get_ticks_usec() - start_time
 	) / 1000.0
 
-	print("Texture update: ", elapsed_ms, " ms")
+	print("Texture update: ", elapsed_ms, " ms")"""
 
-#Godot v4.7.1.stable - Ubuntu 22.04.5 LTS 22.04 on Wayland - X11 display driver, Multi-window, 1 monitor - OpenGL 3 (Compatibility) - llvmpipe (LLVM 15.0.7, 128 bits) -  (6 threads) - 7.73 GiB memory - PulseAudio (44100 Hz, Stereo/mono)
 func _exit_tree() -> void:
 	mutex.lock()
 	is_running = false
