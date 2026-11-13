@@ -33,6 +33,7 @@ setup(
             'keyboard_to_servo = rov_ctrl_sys.keyboard_to_servo:main',
             'motor_controller = rov_ctrl_sys.motor_controller:main',
             'thruster_allocator = rov_ctrl_sys.thruster_allocator:main',
+            'underwater_sim = rov_ctrl_sys.underwater_sim:main',
 #             'crab_detect = rov_ctrl_sys.crab_detect:main',
             'window = rov_ctrl_sys.window:main',
 #             'calibrate_motors = rov_ctrl_sys.calibrate_motors:main',

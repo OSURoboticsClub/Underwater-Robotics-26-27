@@ -1,0 +1,13 @@
+name: rov-humble
+channels:
+  - robostack-humble
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - ros-humble-ros-base
+  - ros-humble-joy
+  - colcon-common-extensions
+  - pygame
+  - pyserial
+  - pytest

@@ -5,6 +5,8 @@ compatibility_minimum = "4.2"
 
 [libraries]
 
+macos.debug.arm64 = "res://addons/ros2_for_godot/bin/macos/libros2_for_godot.dylib"
+macos.release.arm64 = "res://addons/ros2_for_godot/bin/macos/libros2_for_godot.dylib"
 linux.debug.arm64 = "res://addons/ros2_for_godot/bin/linux.arm64/libros2_for_godot.so"
 linux.release.arm64 = "res://addons/ros2_for_godot/bin/linux.arm64/libros2_for_godot.so"
 linux.debug.x86_64 = "res://addons/ros2_for_godot/bin/linux.x86_64/libros2_for_godot.so"

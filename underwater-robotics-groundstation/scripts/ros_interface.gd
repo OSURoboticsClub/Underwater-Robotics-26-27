@@ -141,7 +141,47 @@ func _handle_keyboard_inputs() -> void:
 	if Input.is_action_pressed("y"):
 		inputs.append("Y")
 
-	
+	# ROV Movement Keys (WASD + Q/E + Space/Shift)
+	if Input.is_key_pressed(KEY_W):
+		inputs.append("W")
+	if Input.is_key_pressed(KEY_S):
+		inputs.append("S")
+	if Input.is_key_pressed(KEY_A):
+		inputs.append("A")
+	if Input.is_key_pressed(KEY_D):
+		inputs.append("D")
+	if Input.is_key_pressed(KEY_Q):
+		inputs.append("Q")
+	if Input.is_key_pressed(KEY_E):
+		inputs.append("E")
+	if Input.is_key_pressed(KEY_SPACE):
+		inputs.append("SPACE")
+	if Input.is_key_pressed(KEY_SHIFT):
+		inputs.append("SHIFT")
+
+	# Gamepad Joysticks (if controller connected to Mac)
+	if Input.get_connected_joypads().size() > 0:
+		var lx = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+		var ly = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+		var rx = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
+		var ry = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+		var lt = Input.get_joy_axis(0, JOY_AXIS_TRIGGER_LEFT)
+		var rt = Input.get_joy_axis(0, JOY_AXIS_TRIGGER_RIGHT)
+		
+		var deadzone = 0.15
+		if abs(lx) > deadzone:
+			inputs.append("JOY_LX:" + str(snappedf(lx, 0.01)))
+		if abs(ly) > deadzone:
+			inputs.append("JOY_LY:" + str(snappedf(ly, 0.01)))
+		if abs(rx) > deadzone:
+			inputs.append("JOY_RX:" + str(snappedf(rx, 0.01)))
+		if abs(ry) > deadzone:
+			inputs.append("JOY_RY:" + str(snappedf(ry, 0.01)))
+		if lt > 0.1:
+			inputs.append("JOY_LT:" + str(snappedf(lt, 0.01)))
+		if rt > 0.1:
+			inputs.append("JOY_RT:" + str(snappedf(rt, 0.01)))
+
 	# Send imputs if there are any
 	if inputs.size() > 0:
 		var msg = RosMsg.create("std_msgs/msg/String")

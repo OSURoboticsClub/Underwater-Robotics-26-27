@@ -5,6 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+if(APPLE)
+    add_link_options(-undefined dynamic_lookup)
+endif()
+
+# Python for generators and symbols
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
 # godot-cpp
 add_subdirectory(godot-cpp)
 
@@ -64,6 +71,7 @@ target_include_directories(ros2_bridge PRIVATE
 )
 target_link_libraries(ros2_bridge PUBLIC
     rclcpp::rclcpp
+    Python3::Python
     ${std_msgs_TARGETS}
     ${builtin_interfaces_TARGETS}
     ${geometry_msgs_TARGETS}
