@@ -18,6 +18,7 @@ func _add_error(e:String) -> void:
 	label.name = 'Error'
 	label.text = e
 	label.add_theme_color_override("font_color", error_color)
+	label.add_theme_font_size_override("font_size", 16)
 	add_child(label)
 	_scroll_to_bottom()
 	_limit_size()

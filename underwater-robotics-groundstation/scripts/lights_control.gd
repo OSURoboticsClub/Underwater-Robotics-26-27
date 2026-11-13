@@ -9,6 +9,7 @@ extends VBoxContainer
 func _ready() -> void:
 	SignalBus.incoming_data.connect(process_data)
 	exterior_button.pressed.connect(toggle_exterior)
+	dome_button.pressed.connect(toggle_dome)
 	#TODO: connect dome light button
 	
 	exterior_slider.drag_ended.connect(update_brightness)
@@ -17,9 +18,14 @@ func _ready() -> void:
 
 # this is only triggered by a mouse click, not toggling in code.
 func toggle_exterior():
-	var output : Dictionary[String, Variant] = {}
-	output["ext_lights"] = int(exterior_button.button_pressed)
-	SignalBus.outgoing_data.emit("servo", output)
+	#var output : Dictionary[String, Variant] = {}
+	#output["ext_lights"] = int(exterior_button.button_pressed)
+	#SignalBus.outgoing_data.emit("servo", output)
+	SignalBus.publish_lights_data.emit("e")
+	pass
+	
+func toggle_dome():
+	SignalBus.publish_lights_data.emit("d")
 	pass
 
 func update_brightness(changed: bool):

@@ -11,6 +11,16 @@
 [ext_resource type="Texture2D" uid="uid://85iqfubh7f8i" path="res://visibility_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="11_0oce6"]
 [ext_resource type="Texture2D" uid="uid://h23ut7vjrkcb" path="res://visibility_off_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" id="12_o2qoy"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1rr46"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+color = Color(0.74, 0.34114003, 0.014799986, 1)
+grow_begin = -5.0
+grow_end = -5.0
+thickness = 2
+
 [sub_resource type="LabelSettings" id="LabelSettings_kk4qh"]
 line_spacing = -6.0
 
@@ -34,6 +44,18 @@ line_spacing = -6.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_88qfr"]
 line_spacing = -6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0oce6"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.4627451, 0.023529412, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1rr46"]
 content_margin_left = 2.0
@@ -93,7 +115,7 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=2086426375]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(345, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
@@ -102,30 +124,49 @@ theme_override_constants/margin_bottom = 8
 
 [node name="TabContainer" type="TabContainer" parent="HBoxContainer/MarginContainer" unique_id=1011071868]
 layout_mode = 2
-size_flags_vertical = 0
+theme_override_font_sizes/font_size = 19
 current_tab = 0
+drag_to_rearrange_enabled = true
 
-[node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=219596801]
+[node name="Data" type="MarginContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=1534484279]
 layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 5
 metadata/_tab_index = 0
 
-[node name="Title" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox" unique_id=961857519]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data" unique_id=1231848332]
+layout_mode = 2
+
+[node name="DataScrollContainer" type="ScrollContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer" unique_id=947655664]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer" unique_id=219596801]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox" unique_id=961857519]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "ROV Control"
 horizontal_alignment = 1
 
-[node name="Data" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox" unique_id=278785453]
+[node name="DataNotAdded" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox" unique_id=278785453]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "preassure_sensor: 1500
 esp2_sensor: 1500"
 
-[node name="DataOutput" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox" unique_id=2087478429]
+[node name="DataOutput" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox" unique_id=2087478429]
 layout_mode = 2
 script = ExtResource("2_l06f4")
 
-[node name="DataLabel13" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1915141002]
+[node name="HSeparator6" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=2142237871]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="DataLabel13" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1915141002]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Manip Open"
@@ -133,7 +174,7 @@ data_name = "manip"
 start_value = "0"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel14" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=163711263]
+[node name="DataLabel14" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=163711263]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Manip Rotate"
@@ -141,23 +182,12 @@ data_name = "manip_rotate"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel15" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=821603210]
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=3007672]
 layout_mode = 2
-script = ExtResource("2_iwhwg")
-prefix = "Dome Lights On"
-data_name = "dome_lights"
-start_value = "0.0"
-metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
 
-[node name="DataLabel16" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=157547401]
-layout_mode = 2
-script = ExtResource("2_iwhwg")
-prefix = "Exterior Lights On"
-data_name = "ext_lights"
-start_value = "0.0"
-metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
-
-[node name="DataLabel" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1197258516]
+[node name="DataLabel" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1197258516]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Camera X"
@@ -165,7 +195,7 @@ data_name = "camera_x"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel2" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1361121200]
+[node name="DataLabel2" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1361121200]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Camera Y"
@@ -173,7 +203,28 @@ data_name = "camera_y"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel3" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1146685398]
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1198217194]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="DataLabel15" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=821603210]
+layout_mode = 2
+script = ExtResource("2_iwhwg")
+prefix = "Dome Lights On"
+data_name = "dome_lights"
+start_value = "0.0"
+metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
+
+[node name="DataLabel16" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=157547401]
+layout_mode = 2
+script = ExtResource("2_iwhwg")
+prefix = "Exterior Lights On"
+data_name = "ext_lights"
+start_value = "0.0"
+metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
+
+[node name="DataLabel3" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1146685398]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Exterior Lights"
@@ -181,7 +232,7 @@ data_name = "ext_lights_max"
 start_value = "1.0"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel4" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1224238863]
+[node name="DataLabel4" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1224238863]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Dome Lights"
@@ -189,7 +240,12 @@ data_name = "dome_lights_max"
 start_value = "1.0"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel5" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1934889837]
+[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1902755836]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="DataLabel5" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1934889837]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Left Lateral"
@@ -197,7 +253,7 @@ data_name = "lfl"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel6" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1737163425]
+[node name="DataLabel6" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1737163425]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Right Lateral"
@@ -205,7 +261,7 @@ data_name = "lfr"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel7" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1280137088]
+[node name="DataLabel7" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1280137088]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Left Lateral"
@@ -213,7 +269,7 @@ data_name = "lbl"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel8" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1334110982]
+[node name="DataLabel8" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1334110982]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Right Lateral"
@@ -221,8 +277,12 @@ data_name = "lbr"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel9" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=464201702]
-visible = false
+[node name="HSeparator4" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1826119164]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="DataLabel9" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=464201702]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Left Vertical"
@@ -230,8 +290,7 @@ data_name = "vfl"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel10" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1165701359]
-visible = false
+[node name="DataLabel10" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1165701359]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Front Right Vertical"
@@ -239,8 +298,7 @@ data_name = "vfr"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel11" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=1025666816]
-visible = false
+[node name="DataLabel11" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1025666816]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Left Vertical"
@@ -248,8 +306,7 @@ data_name = "vbl"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="DataLabel12" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=197201087]
-visible = false
+[node name="DataLabel12" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=197201087]
 layout_mode = 2
 script = ExtResource("2_iwhwg")
 prefix = "Back Right Vertical"
@@ -257,17 +314,22 @@ data_name = "vbr"
 start_value = "1500"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
-[node name="ROVDisplay" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput" unique_id=717106469]
+[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=1762550511]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="ROVDisplay" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput" unique_id=717106469]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 127
 
-[node name="Left" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=524970458]
+[node name="Left" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=524970458]
 layout_mode = 2
 theme_override_constants/separation = -3
 
-[node name="lfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1729001950]
+[node name="lfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1729001950]
 layout_mode = 2
 text = "      _______
     /           /
@@ -275,7 +337,7 @@ text = "      _______
 /_______/"
 label_settings = SubResource("LabelSettings_kk4qh")
 
-[node name="vfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=605612367]
+[node name="vfl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=605612367]
 layout_mode = 2
 text = " _______
 |          |
@@ -283,7 +345,7 @@ text = " _______
 |______|"
 label_settings = SubResource("LabelSettings_l0yk3")
 
-[node name="vbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=635481166]
+[node name="vbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=635481166]
 layout_mode = 2
 text = " _______
 |          |
@@ -291,7 +353,7 @@ text = " _______
 |______|"
 label_settings = SubResource("LabelSettings_o4j38")
 
-[node name="lbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1817936084]
+[node name="lbl" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Left" unique_id=1817936084]
 layout_mode = 2
 text = "________
 \\           \\
@@ -299,11 +361,11 @@ text = "________
     \\_______\\"
 label_settings = SubResource("LabelSettings_61srk")
 
-[node name="Right" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=463502404]
+[node name="Right" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay" unique_id=463502404]
 layout_mode = 2
 theme_override_constants/separation = -3
 
-[node name="lfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=1237626418]
+[node name="lfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=1237626418]
 layout_mode = 2
 text = "________
 \\           \\
@@ -311,7 +373,7 @@ text = "________
     \\_______\\"
 label_settings = SubResource("LabelSettings_afgc5")
 
-[node name="vfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=613317402]
+[node name="vfr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=613317402]
 layout_mode = 2
 text = "      _______
      |          |
@@ -319,7 +381,7 @@ text = "      _______
      |______|"
 label_settings = SubResource("LabelSettings_qr07w")
 
-[node name="vbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=2039283184]
+[node name="vbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=2039283184]
 layout_mode = 2
 text = "      _______
      |          |
@@ -327,7 +389,7 @@ text = "      _______
      |______|"
 label_settings = SubResource("LabelSettings_nlft0")
 
-[node name="lbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=173096926]
+[node name="lbr" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/InfoVBox/DataOutput/ROVDisplay/Right" unique_id=173096926]
 layout_mode = 2
 text = "      _______
     /           /
@@ -335,112 +397,171 @@ text = "      _______
 /_______/"
 label_settings = SubResource("LabelSettings_88qfr")
 
-[node name="ErrorScrolling" type="ScrollContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox" unique_id=2026053639]
+[node name="ErrorScrolling" type="ScrollContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer" unique_id=2026053639]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_0oce6")
 
-[node name="Errors" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/InfoVBox/ErrorScrolling" unique_id=1846108422]
+[node name="Errors" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/ErrorScrolling" unique_id=1846108422]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 script = ExtResource("3_sq7ho")
 error_color = Color(0.83137256, 0, 0, 1)
 
-[node name="Lights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=791987815]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/MarginContainer/TabContainer/Data/VBoxContainer/ErrorScrolling/Errors" unique_id=1671350874]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 21
+bbcode_enabled = true
+text = "[u]Error Output[/u]"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="Lights" type="MarginContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=853578865]
 visible = false
 layout_mode = 2
-script = ExtResource("4_5y2nw")
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 5
 metadata/_tab_index = 1
 
-[node name="ExteriorLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights" unique_id=1844807636]
+[node name="Lights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights" unique_id=791987815]
 layout_mode = 2
+script = ExtResource("4_5y2nw")
 
-[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=1736801829]
+[node name="ExteriorLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights" unique_id=1844807636]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/ExteriorLights" unique_id=1736801829]
 layout_mode = 2
 text = "Exterior Lights"
 
-[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=1542853486]
+[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/ExteriorLights" unique_id=1542853486]
 layout_mode = 2
-disabled = true
 text = "Enabled"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights" unique_id=935678711]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/ExteriorLights" unique_id=935678711]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights/HBoxContainer" unique_id=382243942]
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/ExteriorLights/HBoxContainer" unique_id=382243942]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Brightness"
 
-[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/ExteriorLights/HBoxContainer" unique_id=343189596]
+[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/ExteriorLights/HBoxContainer" unique_id=343189596]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 value = 1.0
+editable = false
 tick_count = 10
 ticks_on_borders = true
 ticks_position = 3
 
-[node name="DomeLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights" unique_id=1059527269]
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights" unique_id=2082321245]
 layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
 
-[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=983793355]
+[node name="DomeLights" type="VBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights" unique_id=1059527269]
 layout_mode = 2
-text = "
-Dome Lights"
+theme_override_constants/separation = 6
 
-[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=1784918180]
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/DomeLights" unique_id=983793355]
 layout_mode = 2
-disabled = true
+text = "Dome Lights"
+
+[node name="EnabledButton" type="CheckButton" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/DomeLights" unique_id=1784918180]
+layout_mode = 2
 text = "Enabled"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights" unique_id=725897867]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/DomeLights" unique_id=725897867]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights/HBoxContainer" unique_id=689523432]
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/DomeLights/HBoxContainer" unique_id=689523432]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Brightness"
 
-[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/DomeLights/HBoxContainer" unique_id=1346901933]
+[node name="HSlider" type="HSlider" parent="HBoxContainer/MarginContainer/TabContainer/Lights/Lights/DomeLights/HBoxContainer" unique_id=1346901933]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 value = 1.0
+editable = false
 tick_count = 10
 ticks_on_borders = true
 ticks_position = 3
 
-[node name="Inputs" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=18536113 instance=ExtResource("5_1rr46")]
+[node name="Input" type="MarginContainer" parent="HBoxContainer/MarginContainer/TabContainer" unique_id=454626304]
 visible = false
 layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 5
 metadata/_tab_index = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer" unique_id=739006746]
-visible = false
-custom_minimum_size = Vector2(300, 0)
+[node name="Inputs" parent="HBoxContainer/MarginContainer/TabContainer/Input" unique_id=18536113 instance=ExtResource("5_1rr46")]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="HBoxContainer" unique_id=1148199346]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Camera Feed" type="TextureRect" parent="HBoxContainer/Control" unique_id=1586419186]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control" unique_id=1117769400]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/HBoxContainer" unique_id=1103546871]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VerticalVelocity" type="VBoxContainer" parent="HBoxContainer/Control/HBoxContainer/MarginContainer" unique_id=1368037531]
+layout_mode = 2
+theme_override_constants/separation = 0
+script = ExtResource("8_eqarp")
+
+[node name="ProgressBarTop" type="ProgressBar" parent="HBoxContainer/Control/HBoxContainer/MarginContainer/VerticalVelocity" unique_id=1853757269]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_1rr46")
+theme_override_styles/fill = SubResource("StyleBoxFlat_eqarp")
+min_value = 1500.0
+max_value = 1875.0
+value = 1500.0
+fill_mode = 3
+show_percentage = false
+
+[node name="ProgressBarBottom" type="ProgressBar" parent="HBoxContainer/Control/HBoxContainer/MarginContainer/VerticalVelocity" unique_id=1809064960]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_fc6ls")
+theme_override_styles/fill = SubResource("StyleBoxFlat_5y2nw")
+max_value = 375.0
+fill_mode = 2
+show_percentage = false
+
+[node name="Camera Feed" type="TextureRect" parent="HBoxContainer/Control/HBoxContainer" unique_id=1586419186]
+layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("1_n7l54")
 expand_mode = 2
 stretch_mode = 5
 script = ExtResource("2_bfu0d")
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/Camera Feed" unique_id=642287454]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/HBoxContainer/Camera Feed" unique_id=642287454]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -453,44 +574,10 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="ToggleFeedButton" type="TextureButton" parent="HBoxContainer/Control/Camera Feed/MarginContainer" unique_id=1018116020]
+[node name="ToggleFeedButton" type="TextureButton" parent="HBoxContainer/Control/HBoxContainer/Camera Feed/MarginContainer" unique_id=1018116020]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 toggle_mode = true
 texture_normal = ExtResource("11_0oce6")
 texture_pressed = ExtResource("12_o2qoy")
 stretch_mode = 5
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control" unique_id=1103546871]
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 16.0
-grow_vertical = 2
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="VerticalVelocity" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer" unique_id=1368037531]
-layout_mode = 2
-theme_override_constants/separation = 0
-script = ExtResource("8_eqarp")
-
-[node name="ProgressBarTop" type="ProgressBar" parent="HBoxContainer/Control/MarginContainer/VerticalVelocity" unique_id=1853757269]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/background = SubResource("StyleBoxFlat_1rr46")
-theme_override_styles/fill = SubResource("StyleBoxFlat_eqarp")
-min_value = 1500.0
-max_value = 1875.0
-value = 1500.0
-fill_mode = 3
-show_percentage = false
-
-[node name="ProgressBarBottom" type="ProgressBar" parent="HBoxContainer/Control/MarginContainer/VerticalVelocity" unique_id=1809064960]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/background = SubResource("StyleBoxFlat_fc6ls")
-theme_override_styles/fill = SubResource("StyleBoxFlat_5y2nw")
-max_value = 375.0
-fill_mode = 2
-show_percentage = false

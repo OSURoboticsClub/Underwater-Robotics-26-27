@@ -25,6 +25,12 @@ var remap_buttons: Dictionary[StringName, Button] = {}
 
 
 func _ready() -> void:
+	#TODO: save default controls as "Default", and when you try and change default
+	# it just creates a new setup.
+	profile_name_input.text = "Default"
+	_on_save_profile_pressed()
+	profile_name_input.text = ""
+	# How do you make it so that you cant edit the saved defaults.
 	_build_controls()
 	$ProfileControls/SaveRow/SaveButton.pressed.connect(_on_save_profile_pressed)
 	$ProfileControls/LoadRow/LoadButton.pressed.connect(_on_load_profile_pressed)
