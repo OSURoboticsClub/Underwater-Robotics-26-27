@@ -20,17 +20,37 @@ var ready_image_time_usec: int = 0
 var last_callback_time_usec: int = 0
 var last_display_time_usec: int = 0
 
+# 3D Godot Simulation mode toggle
+@export var use_sim_mode: bool = true
+var sim_viewport: SubViewport = null
+
 
 func _ready() -> void:
 	mutex = Mutex.new()
 	semaphore = Semaphore.new()
 	thread = Thread.new()
 
+	sim_viewport = get_node_or_null("../SimViewport")
+	if sim_viewport and use_sim_mode:
+		texture = sim_viewport.get_texture()
+
 	SignalBus.incoming_video.connect(on_incoming_video_signal)
 	thread.start(_thread_loop)
 
 
+func set_sim_mode(enabled: bool) -> void:
+	use_sim_mode = enabled
+	if use_sim_mode:
+		if sim_viewport:
+			texture = sim_viewport.get_texture()
+	else:
+		if camera_texture:
+			texture = camera_texture
+
+
 func on_incoming_video_signal(image_msg) -> void:
+	if use_sim_mode:
+		return
 	var now := Time.get_ticks_usec()
 
 	"""if last_callback_time_usec != 0:
@@ -67,6 +87,11 @@ func on_incoming_video_signal(image_msg) -> void:
 
 
 func _process(_delta: float) -> void:
+	if use_sim_mode:
+		if sim_viewport and texture != sim_viewport.get_texture():
+			texture = sim_viewport.get_texture()
+		return
+
 	var image_to_display: Image = null
 	var image_ready_time: int = 0
 

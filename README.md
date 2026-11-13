@@ -82,9 +82,15 @@ Underwater-Robotics-26-27/
 │   ├── main_window.tscn               # Primary control dashboard
 │   ├── cameras_window.tscn            # Secondary multi-camera view
 │   ├── window_manager.tscn            # Multi-window orchestrator
+│   ├── sim/                           # Built-in 3D Simulation Environment (SubViewport)
+│   │   ├── sim_world.tscn             # 3D ocean environment (pipeline, seabed, gate, marine life)
+│   │   ├── sim_rov.gd                 # 6-DOF ROV hydrodynamic physics, gimbal, and spotlights
+│   │   ├── sim_crab.gd                # Benthic crab crawl & animation script
+│   │   └── sim_fish.gd                # Marine fish schooling & swimming script
 │   ├── scripts/                       # GDScript logic
 │   │   ├── ros_interface.gd           # ROS 2 node & topic bridge
-│   │   ├── camera_feed.gd             # Multi-threaded image stream decoder
+│   │   ├── camera_feed.gd             # Multi-threaded image stream decoder & Sim viewport switch
+│   │   ├── mode_toggle.gd             # 3D Sim vs Live ROS 2 mode toggle button
 │   │   ├── data_output.gd             # Telemetry parsing & label updates
 │   │   ├── vertical_movement.gd       # Vertical thruster progress indicators
 │   │   ├── lights_control.gd          # Spotlight & dome light sliders
@@ -320,10 +326,21 @@ cp build/bin/libros2_for_godot.dylib ../addons/ros2_for_godot/bin/macos/
 1. **Switch to DirectInput Mode**: Check the physical slide switch on the back of the controller labeled `[ X | D ]`. Flip it to **`D`**. *(The `X` position uses Windows XInput which macOS cannot read as a standard joystick without third-party kexts).*
 2. **Quit Steam**: Steam running on macOS claims exclusive USB access to controllers (`steam_osx`). Completely quit Steam (`⌘ + Q`) before launching the Groundstation.
 
-#### 7. Run the Local Simulation
-```bash
-~/Underwater-Robotics-26-27/run_sim.sh
-```
+#### 7. Run the Simulation Locally
+You have two local simulation modes available:
+
+- **Option 1: Built-in 3D Godot Simulator (Recommended)**
+  Directly renders a 3D ocean scene (seabed, subsea pipeline, inspection gate, benthic crabs, schooling fish, and full 6-DOF ROV physics with headlights) inside the Groundstation UI:
+  ```bash
+  ~/Underwater-Robotics-26-27/run_groundstation.sh
+  ```
+  *(Click the `3D Simulator Mode [ON]` button in the top right at any time to toggle between the 3D sim world and live ROS 2 camera feed).*
+
+- **Option 2: Standalone ROS 2 Python Simulator**
+  Launches the Python-based ROS 2 underwater simulator node (`underwater_sim.py`) with naval HUD and camera streaming over ROS 2 `/image_raw`:
+  ```bash
+  ~/Underwater-Robotics-26-27/run_sim.sh
+  ```
 
 ---
 
@@ -412,19 +429,30 @@ godot --path ~/Underwater-Robotics-26-27/underwater-robotics-groundstation
 
 ### A. Local Simulation & Testing (on macOS)
 
-To run the complete system locally without physical hardware:
+You can test and fly the ROV locally without any physical hardware using either simulation method:
 
+#### 1. Integrated 3D Godot Simulation (Built-in)
+Runs directly inside Godot with hardware-accelerated 3D graphics, dynamic underwater fog, benthic fauna, and interactive headlights:
 ```bash
-# 1. From your terminal, run the unified simulation launcher:
+~/Underwater-Robotics-26-27/run_groundstation.sh
+```
+- **Controls**:
+  - `W` / `S`: Surge Forward / Backward
+  - `A` / `D`: Sway Left / Right
+  - `Q` / `E`: Yaw Turn Left / Right
+  - `Space` / `Shift`: Heave Ascend / Dive
+  - `I` / `K`: Camera Tilt Up / Down
+  - `J` / `L`: Camera Pan Left / Right
+  - `F`: Toggle Dual Spotlight Headlights
+  - Gamepad: Left stick (Surge/Sway), Right stick X (Yaw), Triggers (Ascend/Descend)
+- **Mode Toggle**: Click `3D Simulator Mode [ON]` in the top right to switch between the 3D scene and live ROS 2 camera stream on the fly.
+
+#### 2. Standalone ROS 2 Python Simulator (`underwater_sim.py`)
+Runs the ROS 2 physics node publishing camera frames over `/image_raw` and telemetry:
+```bash
 ~/Underwater-Robotics-26-27/run_sim.sh
 ```
-
-This single command:
-1. Sources your local Conda environment (`rov-humble`).
-2. Configures `ROS_DOMAIN_ID=42`.
-3. Starts the ROS 2 3D underwater simulation node (`underwater_sim`).
-4. Starts the thruster allocator and servo nodes.
-5. Launches the Godot Groundstation UI on your screen.
+This launcher automatically sources Conda (`rov-humble`), launches `sim.launch.py`, and brings up the Groundstation.
 
 > **Logitech F310 Gamepad on Mac:**
 > - Ensure **Steam is closed** (`⌘ + Q`), as Steam claims exclusive USB ownership (`steam_osx`) and blocks other programs from reading gamepad events.

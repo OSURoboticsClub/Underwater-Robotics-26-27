@@ -9,6 +9,8 @@
 [ext_resource type="Theme" uid="uid://w8gxfnwaa2sp" path="res://main_theme.tres" id="6_iwhwg"]
 [ext_resource type="Script" uid="uid://dg6gi1ooo4o10" path="res://scripts/vertical_speed.gd" id="7_guodr"]
 [ext_resource type="Script" uid="uid://cj71gqcmb0822" path="res://scripts/vertical_movement.gd" id="8_eqarp"]
+[ext_resource type="PackedScene" path="res://sim/sim_world.tscn" id="9_simworld"]
+[ext_resource type="Script" uid="uid://r2tgkwgbim3i" path="res://scripts/mode_toggle.gd" id="10_modetoggle"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_kk4qh"]
 line_spacing = -6.0
@@ -487,3 +489,26 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_5y2nw")
 max_value = 375.0
 fill_mode = 2
 show_percentage = false
+
+[node name="SimViewport" type="SubViewport" parent="HBoxContainer/Control"]
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="UnderwaterWorld" parent="HBoxContainer/Control/SimViewport" instance=ExtResource("9_simworld")]
+
+[node name="TopRightControls" type="MarginContainer" parent="HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -230.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="ModeButton" type="Button" parent="HBoxContainer/Control/TopRightControls"]
+layout_mode = 2
+theme = ExtResource("6_iwhwg")
+text = "3D Simulator Mode [ON]"
+script = ExtResource("10_modetoggle")

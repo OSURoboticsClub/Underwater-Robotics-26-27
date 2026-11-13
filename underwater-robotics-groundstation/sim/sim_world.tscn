@@ -1,0 +1,278 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://lw302dx0xh7f" path="res://sim/sim_rov.gd" id="1_rov"]
+[ext_resource type="Script" uid="uid://crhkgqvl251du" path="res://sim/sim_crab.gd" id="2_crab"]
+[ext_resource type="Script" uid="uid://8b5aq1fgm8nn" path="res://sim/sim_fish.gd" id="3_fish"]
+
+[sub_resource type="Environment" id="Environment_ocean"]
+background_mode = 1
+background_color = Color(0.015, 0.08, 0.15, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.06, 0.22, 0.32, 1)
+ambient_light_energy = 0.85
+fog_enabled = true
+fog_light_color = Color(0.02, 0.12, 0.22, 1)
+fog_density = 0.045
+fog_sky_affect = 0.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_Seabed"]
+albedo_color = Color(0.22, 0.38, 0.32, 1)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_seabed"]
+material = SubResource("Mat_Seabed")
+size = Vector2(120, 120)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_floor"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_PipeYellow"]
+albedo_color = Color(0.92, 0.72, 0.12, 1)
+metallic = 0.4
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pipe"]
+material = SubResource("Mat_PipeYellow")
+top_radius = 0.4
+bottom_radius = 0.4
+height = 60.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pipe"]
+height = 60.0
+radius = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Gate"]
+albedo_color = Color(0.95, 0.45, 0.1, 1)
+metallic = 0.3
+roughness = 0.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_gate"]
+material = SubResource("Mat_Gate")
+inner_radius = 1.6
+outer_radius = 1.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Rock"]
+albedo_color = Color(0.28, 0.34, 0.3, 1)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_rock"]
+material = SubResource("Mat_Rock")
+radius = 1.2
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Crab"]
+albedo_color = Color(0.85, 0.25, 0.12, 1)
+roughness = 0.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_crab_body"]
+material = SubResource("Mat_Crab")
+radius = 0.25
+height = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_claw"]
+material = SubResource("Mat_Crab")
+radius = 0.1
+height = 0.15
+
+[sub_resource type="StandardMaterial3D" id="Mat_Fish"]
+albedo_color = Color(0.35, 0.75, 0.88, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="PrismMesh" id="PrismMesh_fish_body"]
+material = SubResource("Mat_Fish")
+size = Vector3(0.2, 0.6, 0.2)
+
+[sub_resource type="PrismMesh" id="PrismMesh_fish_tail"]
+material = SubResource("Mat_Fish")
+size = Vector3(0.15, 0.3, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Snow"]
+transparency = 1
+albedo_color = Color(0.8, 0.95, 1, 0.6)
+
+[sub_resource type="SphereMesh" id="SphereMesh_snow"]
+material = SubResource("Mat_Snow")
+radius = 0.02
+height = 0.04
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rov"]
+size = Vector3(0.8, 0.5, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ROV_Chassis"]
+albedo_color = Color(0.15, 0.15, 0.18, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_rov_chassis"]
+material = SubResource("Mat_ROV_Chassis")
+size = Vector3(0.65, 0.35, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ROV_Foam"]
+albedo_color = Color(0.12, 0.45, 0.85, 1)
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_foam"]
+material = SubResource("Mat_ROV_Foam")
+top_radius = 0.12
+bottom_radius = 0.12
+height = 0.85
+
+[node name="UnderwaterWorld" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ocean")
+
+[node name="Sunlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 15, 0)
+light_color = Color(0.45, 0.82, 0.95, 1)
+light_energy = 0.75
+
+[node name="Seabed" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Seabed"]
+mesh = SubResource("PlaneMesh_seabed")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Seabed"]
+shape = SubResource("WorldBoundaryShape3D_floor")
+
+[node name="Pipeline" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -9.6, -14)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pipeline"]
+mesh = SubResource("CylinderMesh_pipe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pipeline"]
+shape = SubResource("CylinderShape3D_pipe")
+
+[node name="InspectionGate" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8.2, -22)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="InspectionGate"]
+mesh = SubResource("TorusMesh_gate")
+
+[node name="BeaconLight" type="OmniLight3D" parent="InspectionGate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+light_color = Color(1, 0.2, 0.2, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="Rock1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.2, 0, 0, 0, 0.8, 0, 0, 0, 1.4, -4, -9.8, -8)
+mesh = SubResource("SphereMesh_rock")
+
+[node name="Rock2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.8, 0, 0, 0, 1.1, 0, 0, 0, 1.5, 6, -9.7, -12)
+mesh = SubResource("SphereMesh_rock")
+
+[node name="Rock3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.0, 0, 0, 0, 0.6, 0, 0, 0, 0.9, 1, -9.8, -18)
+mesh = SubResource("SphereMesh_rock")
+
+[node name="Crab1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -9.8, -7)
+script = ExtResource("2_crab")
+
+[node name="Body" type="MeshInstance3D" parent="Crab1"]
+mesh = SubResource("SphereMesh_crab_body")
+
+[node name="LeftClaw" type="MeshInstance3D" parent="Crab1/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.05, -0.2)
+mesh = SubResource("SphereMesh_claw")
+
+[node name="RightClaw" type="MeshInstance3D" parent="Crab1/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.05, -0.2)
+mesh = SubResource("SphereMesh_claw")
+
+[node name="Crab2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -9.8, -11)
+script = ExtResource("2_crab")
+
+[node name="Body" type="MeshInstance3D" parent="Crab2"]
+mesh = SubResource("SphereMesh_crab_body")
+
+[node name="LeftClaw" type="MeshInstance3D" parent="Crab2/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.05, -0.2)
+mesh = SubResource("SphereMesh_claw")
+
+[node name="RightClaw" type="MeshInstance3D" parent="Crab2/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.05, -0.2)
+mesh = SubResource("SphereMesh_claw")
+
+[node name="Fish1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -5, -10)
+script = ExtResource("3_fish")
+
+[node name="Body" type="MeshInstance3D" parent="Fish1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("PrismMesh_fish_body")
+
+[node name="Tail" type="MeshInstance3D" parent="Fish1/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+mesh = SubResource("PrismMesh_fish_tail")
+
+[node name="Fish2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4, -16)
+script = ExtResource("3_fish")
+
+[node name="Body" type="MeshInstance3D" parent="Fish2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("PrismMesh_fish_body")
+
+[node name="Tail" type="MeshInstance3D" parent="Fish2/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+mesh = SubResource("PrismMesh_fish_tail")
+
+[node name="MarineSnow" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, -12)
+amount = 120
+lifetime = 6.0
+mesh = SubResource("SphereMesh_snow")
+emission_shape = 3
+emission_box_extents = Vector3(25, 6, 25)
+gravity = Vector3(0, -0.15, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.15
+
+[node name="ROV" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, 0)
+script = ExtResource("1_rov")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ROV"]
+shape = SubResource("BoxShape3D_rov")
+
+[node name="ChassisMesh" type="MeshInstance3D" parent="ROV"]
+mesh = SubResource("BoxMesh_rov_chassis")
+
+[node name="LeftFoam" type="MeshInstance3D" parent="ROV"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.38, 0.15, 0)
+mesh = SubResource("CylinderMesh_foam")
+
+[node name="RightFoam" type="MeshInstance3D" parent="ROV"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.38, 0.15, 0)
+mesh = SubResource("CylinderMesh_foam")
+
+[node name="GimbalPan" type="Node3D" parent="ROV"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.45)
+
+[node name="GimbalTilt" type="Node3D" parent="ROV/GimbalPan"]
+
+[node name="Camera3D" type="Camera3D" parent="ROV/GimbalPan/GimbalTilt"]
+current = true
+fov = 68.0
+near = 0.1
+far = 80.0
+
+[node name="LightLeft" type="SpotLight3D" parent="ROV/GimbalPan/GimbalTilt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0, 0)
+light_color = Color(0.95, 0.98, 1, 1)
+light_energy = 0.0
+spot_range = 28.0
+spot_angle = 35.0
+
+[node name="LightRight" type="SpotLight3D" parent="ROV/GimbalPan/GimbalTilt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0, 0)
+light_color = Color(0.95, 0.98, 1, 1)
+light_energy = 0.0
+spot_range = 28.0
+spot_angle = 35.0
