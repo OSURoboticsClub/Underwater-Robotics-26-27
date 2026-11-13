@@ -5,16 +5,13 @@ var servo_publisher: RosPublisher
 
 var motor_subscription: RosSubscription
 var servo_subscription: RosSubscription
-var joy_servo_subscription: RosSubscription
 var video_subscription: RosSubscription
 
-var last_physics_time_usec: int = 0
 
-
-func _ready():
+func _ready() -> void:
 	await get_tree().process_frame
 
-	# Create Subscriptions
+	# Subscriptions
 	servo_subscription = create_subscription(
 		"std_msgs/msg/String",
 		"/servo_command",
@@ -22,22 +19,8 @@ func _ready():
 		10
 	)
 	if servo_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/servo_command'")
-	else:
-		print("Subscription created: ", servo_subscription)
-	
-	"""joy_servo_subscription = create_subscription(
-		"std_msgs/msg/String",
-		"/servo_command",
-		_on_message_received,
-		10
-	)
-	if joy_servo_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/servo_command'")
-	else:
-		print("Subscription created: ", joy_servo_subscription)"""
-		
-	
+		SignalBus.error.emit("Failed to subscribe to /servo_command")
+
 	video_subscription = create_subscription(
 		"sensor_msgs/msg/Image",
 		"/image_raw",
@@ -45,11 +28,8 @@ func _ready():
 		RosQoSProfile.sensor_data()
 	)
 	if video_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/image_raw'")
-	else:
-		print("Subscription created: ", video_subscription)
-	
-	
+		SignalBus.error.emit("Failed to subscribe to /image_raw")
+
 	motor_subscription = create_subscription(
 		"std_msgs/msg/String",
 		"/motor_command",
@@ -57,67 +37,37 @@ func _ready():
 		10
 	)
 	if motor_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/motor_command'")
-	else:
-		print("Subscription created: ", motor_subscription)
-	
-	
-	# Create Publishers
+		SignalBus.error.emit("Failed to subscribe to /motor_command")
+
+	# Publishers
 	key_states_publisher = create_publisher(
 		"std_msgs/msg/String",
 		"/key_states",
 		10
 	)
 	if key_states_publisher == null:
-		SignalBus.error.emit("Failed to create publisher to '/key_states'")
-	else:
-		print("Publisher created: ", key_states_publisher)
-	
-	servo_publisher = create_publisher( #TODO: This needs to actually go to /gound/joy - joy_to_servo
+		SignalBus.error.emit("Failed to create publisher for /key_states")
+
+	servo_publisher = create_publisher(
 		"std_msgs/msg/String",
 		"/servo_command",
 		10
 	)
-	if servo_subscription == null:
-		SignalBus.error.emit("Failed to create publisher to '/servo_command'")
-	else:
-		print("Publisher created: ", servo_subscription)
-	
+	if servo_publisher == null:
+		SignalBus.error.emit("Failed to create publisher for /servo_command")
+
 	SignalBus.outgoing_data.connect(_publish_data)
 
 
-
 func _process(_delta: float) -> void:
-	#var now := Time.get_ticks_usec()
-
-	"""if last_physics_time_usec != 0:
-		var interval_ms := (
-			now - last_physics_time_usec
-		) / 1000.0
-
-		if interval_ms > 30.0:
-			print("Physics interval: ", interval_ms, " ms")
-
-	last_physics_time_usec = now
-
-	var spin_start_usec := Time.get_ticks_usec()"""
 	spin_some()
-	"""var spin_duration_ms := (
-		Time.get_ticks_usec() - spin_start_usec
-	) / 1000.0"""
-
-	#if spin_duration_ms > 5.0:
-	#	print("spin_some duration: ", spin_duration_ms, " ms")
-
-	if Input.is_key_pressed(KEY_P):
-		SignalBus.error.emit("New Test Error")
-	
-	# Get inputs and publish them to appropriate topics
 	_handle_keyboard_inputs()
 
+
 func _handle_keyboard_inputs() -> void:
-	var inputs = []
-	
+	var inputs: Array[String] = []
+
+	# Action mappings
 	if Input.is_action_pressed("up"):
 		inputs.append("UP")
 	if Input.is_action_pressed("down"):
@@ -132,8 +82,6 @@ func _handle_keyboard_inputs() -> void:
 		inputs.append("E")
 	if Input.is_action_pressed("camera"):
 		inputs.append("C")
-	
-	# Reset camera position
 	if Input.is_action_pressed("reset"):
 		inputs.append("BACKSPACE")
 	if Input.is_action_pressed("x"):
@@ -159,7 +107,7 @@ func _handle_keyboard_inputs() -> void:
 	if Input.is_key_pressed(KEY_SHIFT):
 		inputs.append("SHIFT")
 
-	# Gamepad Joysticks (if controller connected to Mac)
+	# Gamepad Joysticks (if connected)
 	if Input.get_connected_joypads().size() > 0:
 		var lx = Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
 		var ly = Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
@@ -167,7 +115,7 @@ func _handle_keyboard_inputs() -> void:
 		var ry = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
 		var lt = Input.get_joy_axis(0, JOY_AXIS_TRIGGER_LEFT)
 		var rt = Input.get_joy_axis(0, JOY_AXIS_TRIGGER_RIGHT)
-		
+
 		var deadzone = 0.15
 		if abs(lx) > deadzone:
 			inputs.append("JOY_LX:" + str(snappedf(lx, 0.01)))
@@ -182,46 +130,38 @@ func _handle_keyboard_inputs() -> void:
 		if rt > 0.1:
 			inputs.append("JOY_RT:" + str(snappedf(rt, 0.01)))
 
-	# Send imputs if there are any
-	if inputs.size() > 0:
+	# Publish inputs if active
+	if inputs.size() > 0 and key_states_publisher != null:
 		var msg = RosMsg.create("std_msgs/msg/String")
 		msg.data = ",".join(inputs)
 		key_states_publisher.publish(msg)
-	#list of keys the are used in other nodes:
-	# C - camera
-	# D - dome lights
-	# E - exterior lights
-	# UP - camera up
-	# DOWN - camera down
-	# LEFT - camera left
-	# RIGHT - camera right
-	# BACKSPACE
-	# X
-	# Y
 
 
-func _on_message_received(msg):
-	#print("RECEIVED MESSAGE: ", msg.data)
-	var data: Dictionary[String,Variant] = {}
-	var pieces_of_data = msg.data.split(",")
-	for d in pieces_of_data:
-		var data_parts = d.split("=")
-		#print("data_parts: " + str(data_parts))
-		data[data_parts.get(0)] = data_parts.get(1)
-	if data != {}:
+func _on_message_received(msg) -> void:
+	if msg == null or msg.data.is_empty():
+		return
+
+	var data: Dictionary[String, Variant] = {}
+	var pieces = msg.data.split(",")
+	for p in pieces:
+		var parts = p.split("=")
+		if parts.size() == 2:
+			data[parts[0]] = parts[1]
+
+	if not data.is_empty():
 		SignalBus.incoming_data.emit(data)
 
 
 func _handle_image(msg) -> void:
-	SignalBus.incoming_video.emit(msg)
+	if msg != null:
+		SignalBus.incoming_video.emit(msg)
 
 
-func _publish_data(pub_name: String, data: Dictionary[String, Variant]):
-	if pub_name == "servo":
-		var output = []
+func _publish_data(pub_name: String, data: Dictionary[String, Variant]) -> void:
+	if pub_name == "servo" and servo_publisher != null:
+		var output: Array[String] = []
 		for key in data:
 			output.append(key + ":" + str(data[key]))
 		var msg = RosMsg.create("std_msgs/msg/String")
 		msg.data = ",".join(output)
 		servo_publisher.publish(msg)
-	pass
