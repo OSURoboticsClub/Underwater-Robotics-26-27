@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REMOTE_PID=""
 LOCAL_PID=""
 
@@ -45,10 +46,10 @@ REMOTE_PID=$!
 
 sleep 1
 
-xterm -T "ROV Local Launch" -e bash -lc '
-source ~/Underwater-Robotics-Current/ros_setup.sh
+xterm -T "ROV Local Launch" -e bash -lc "
+source \"$SCRIPT_DIR/ros_setup.sh\"
 ros2 launch rov_ctrl_sys launch_ground.launch.py
-' &
+" &
 LOCAL_PID=$!
 
 wait -n "$REMOTE_PID" "$LOCAL_PID"

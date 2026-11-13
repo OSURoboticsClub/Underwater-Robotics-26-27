@@ -2,7 +2,8 @@ library(openintro)
 library(tidyverse)
 library(broom)
 
-float_data <- read.csv("C:/Users/smith/Downloads/float-testing.txt")
+file_path <- if (file.exists("float-testing.txt")) "float-testing.txt" else file.choose()
+float_data <- read.csv(file_path)
 
 our_float <- float_data %>%
   filter(name == "EX31") %>%

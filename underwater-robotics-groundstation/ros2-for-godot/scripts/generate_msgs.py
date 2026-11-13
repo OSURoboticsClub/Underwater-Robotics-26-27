@@ -1047,8 +1047,9 @@ def gen_cmake(msgs: List[MsgDef], packages_used: set) -> str:
 # ---------------------------------------------------------------------------
 
 def main():
+    default_ros = os.environ.get("AMENT_PREFIX_PATH", "/opt/ros/humble").split(os.pathsep)[0]
     parser = argparse.ArgumentParser(description="Generate GDExtension message classes from .msg files")
-    parser.add_argument("--ros-dir", default="/opt/ros/humble", help="ROS2 install directory")
+    parser.add_argument("--ros-dir", default=default_ros, help="ROS2 install directory")
     parser.add_argument("--packages", nargs="+",
                         default=["std_msgs", "geometry_msgs", "sensor_msgs", "nav_msgs", "tf2_msgs"],
                         help="ROS2 packages to generate")

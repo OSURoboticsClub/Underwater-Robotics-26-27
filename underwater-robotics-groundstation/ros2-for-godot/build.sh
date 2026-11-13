@@ -50,7 +50,9 @@ build_overlay() {
     mkdir -p "${BUILD_DIR}"
     cd "${BUILD_DIR}"
     cmake "${SCRIPT_DIR}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
-    cmake --build . -j"$(nproc)"
+    local num_jobs
+    num_jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+    cmake --build . -j"${num_jobs}"
 
     echo ""
     echo "=== Build complete (overlay) ==="
@@ -127,7 +129,9 @@ build_standalone() {
     mkdir -p "${GD_BUILD}"
     cd "${GD_BUILD}"
     cmake "${SCRIPT_DIR}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
-    cmake --build . -j"$(nproc)"
+    local num_jobs
+    num_jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+    cmake --build . -j"${num_jobs}"
 
     # Step 4: Collect all .so dependencies into bin/
     echo ""
