@@ -23,7 +23,7 @@ class MotorController(Subscriber):
         baud_descriptor = ParameterDescriptor(description='The rate used to communicate on the serial port')
 
         self.declare_parameter('port', '/dev/ttyUSB0', port_descriptor)
-        self.declare_parameter('baud', 115200, port_descriptor)
+        self.declare_parameter('baud', 115200, baud_descriptor)
 
         self.port = self.get_parameter('port').value
         self.baud = self.get_parameter('baud').value
@@ -32,7 +32,7 @@ class MotorController(Subscriber):
             self.ser = serial.Serial(self.port, self.baud, timeout=0)
             self.ser.flushInput()
             self.ser.flushOutput()
-            self.get_logger().info(f'Opened serial port{self.port} at {self.baud} baud.')
+            self.get_logger().info(f'Opened serial port {self.port} at {self.baud} baud.')
         except serial.SerialException as e:
             self.get_logger().error(f'Failed to open serial port {self.port}: {e}')
             self.ser = None

@@ -70,8 +70,8 @@ class ThrusterAllocator(Node):
 
         # ---- Track previous PWM values (only publish on change) ----
         self.old_values = {
-            'lfl': 0.0, 'lfr': 0.0, 'lbl': 0.0, 'lbr': 0.0,
-            'vfl': 0.0, 'vfr': 0.0, 'vbl': 0.0, 'vbr': 0.0
+            'lfl': None, 'lfr': None, 'lbl': None, 'lbr': None,
+            'vfl': None, 'vfr': None, 'vbl': None, 'vbr': None
         }
 
         # ---- Idle timers (re-send stop commands after sticks released) ----
@@ -98,22 +98,22 @@ class ThrusterAllocator(Node):
 
         # ---- Mixing matrix weights ----
         # Lateral motors: how much each DOF contributes to each motor.
-        # Signs encode the default thruster geometry.
+        # Signs encode the default thruster geometry (vectored frame).
         #
         #   lfl =  fwd * z_lfl  -  strafe * x_lfl  -  yaw * yaw_lfl
         #   lfr =  fwd * z_lfr  +  strafe * x_lfr  +  yaw * yaw_lfr
-        #   lbl =  fwd * z_lbl  -  strafe * x_lbl  +  yaw * yaw_lbl
-        #   lbr =  fwd * z_lbr  +  strafe * x_lbr  -  yaw * yaw_lbr
+        #   lbl =  fwd * z_lbl  +  strafe * x_lbl  -  yaw * yaw_lbl
+        #   lbr =  fwd * z_lbr  -  strafe * x_lbr  +  yaw * yaw_lbr
         for motor in ('lfl', 'lfr', 'lbl', 'lbr'):
             self._params[f'x_{motor}'] = 1.0
             self._params[f'z_{motor}'] = 1.0
             self._params[f'yaw_{motor}'] = 1.0
 
         # Vertical motors:
-        #   vfl =  heave * y_vfl  -  roll * roll_vfl  -  pitch * pitch_vfl
-        #   vfr =  heave * y_vfr  +  roll * roll_vfr  -  pitch * pitch_vfr
-        #   vbl =  heave * y_vbl  -  roll * roll_vbl  +  pitch * pitch_vbl
-        #   vbr =  heave * y_vbr  +  roll * roll_vbr  +  pitch * pitch_vbr
+        #   vfl =  heave * y_vfl  +  roll * roll_vfl  +  pitch * pitch_vfl
+        #   vfr =  heave * y_vfr  -  roll * roll_vfr  +  pitch * pitch_vfr
+        #   vbl =  heave * y_vbl  +  roll * roll_vbl  -  pitch * pitch_vbl
+        #   vbr =  heave * y_vbr  -  roll * roll_vbr  -  pitch * pitch_vbr
         for motor in ('vfl', 'vfr', 'vbl', 'vbr'):
             self._params[f'y_{motor}'] = 1.0
             self._params[f'pitch_{motor}'] = 1.0
@@ -172,14 +172,14 @@ class ThrusterAllocator(Node):
         # ---- Lateral mixing ----
         lfl = ( fwd * p['z_lfl'] - strafe * p['x_lfl'] - yaw * p['yaw_lfl'])
         lfr = ( fwd * p['z_lfr'] + strafe * p['x_lfr'] + yaw * p['yaw_lfr'])
-        lbl = ( fwd * p['z_lbl'] - strafe * p['x_lbl'] + yaw * p['yaw_lbl'])
-        lbr = ( fwd * p['z_lbr'] + strafe * p['x_lbr'] - yaw * p['yaw_lbr'])
+        lbl = ( fwd * p['z_lbl'] + strafe * p['x_lbl'] - yaw * p['yaw_lbl'])
+        lbr = ( fwd * p['z_lbr'] - strafe * p['x_lbr'] + yaw * p['yaw_lbr'])
 
         # ---- Vertical mixing ----
-        vfl = ( heave * p['y_vfl'] - roll * p['roll_vfl'] - pitch * p['pitch_vfl'])
-        vfr = ( heave * p['y_vfr'] + roll * p['roll_vfr'] - pitch * p['pitch_vfr'])
-        vbl = ( heave * p['y_vbl'] - roll * p['roll_vbl'] + pitch * p['pitch_vbl'])
-        vbr = ( heave * p['y_vbr'] + roll * p['roll_vbr'] + pitch * p['pitch_vbr'])
+        vfl = ( heave * p['y_vfl'] + roll * p['roll_vfl'] + pitch * p['pitch_vfl'])
+        vfr = ( heave * p['y_vfr'] - roll * p['roll_vfr'] + pitch * p['pitch_vfr'])
+        vbl = ( heave * p['y_vbl'] + roll * p['roll_vbl'] - pitch * p['pitch_vbl'])
+        vbr = ( heave * p['y_vbr'] - roll * p['roll_vbr'] - pitch * p['pitch_vbr'])
 
         # ---- Clamp to [-1, 1] ----
         motors = {
@@ -222,42 +222,57 @@ class ThrusterAllocator(Node):
         cmd_str = ','.join(f'{k}={v}' for k, v in commands.items())
         self.get_logger().info(f'motor_commands: {cmd_str}')
 
-        # ---- Idle timers: re-send neutral after sticks released ----
-        lateral_cmds = {k: commands[k] for k in commands if k in self.lateral_names}
-        if lateral_cmds and self.lateral_timer:
-            self.lateral_timer.cancel()
-            self.lateral_timer = None
-            self.get_logger().info('Cancelled lateral timer')
+        # ---- Idle timers: re-send neutral after sticks released (one-shot) ----
+        lateral_is_neutral = all(motors[k] == 0.0 for k in self.lateral_names)
+        if not lateral_is_neutral:
+            if self.lateral_timer:
+                self.lateral_timer.cancel()
+                self.lateral_timer = None
+                self.get_logger().info('Cancelled lateral timer')
+        else:
+            if any(k in commands for k in self.lateral_names) and not self.lateral_timer:
+                self.lateral_timer = self.create_timer(
+                    self.timer_delay, self._gen_lateral_timer_cb())
+                self.get_logger().info('Scheduled lateral idle timer')
 
-        neutral_laterals = {k: v for k, v in lateral_cmds.items() if v == 1500}
-        if len(neutral_laterals) == 4:
-            self.lateral_timer = self.create_timer(
-                self.timer_delay, self._gen_timer_cb(neutral_laterals))
-            self.get_logger().info('Scheduled lateral timer')
-
-        vertical_cmds = {k: commands[k] for k in commands if k in self.vertical_names}
-        if vertical_cmds and self.vertical_timer:
-            self.vertical_timer.cancel()
-            self.vertical_timer = None
-            self.get_logger().info('Cancelled vertical timer')
-
-        neutral_verticals = {k: v for k, v in vertical_cmds.items() if v == 1500}
-        if len(neutral_verticals) == 4:
-            self.vertical_timer = self.create_timer(
-                self.timer_delay, self._gen_timer_cb(neutral_verticals))
-            self.get_logger().info('Scheduled vertical timer')
+        vertical_is_neutral = all(motors[k] == 0.0 for k in self.vertical_names)
+        if not vertical_is_neutral:
+            if self.vertical_timer:
+                self.vertical_timer.cancel()
+                self.vertical_timer = None
+                self.get_logger().info('Cancelled vertical timer')
+        else:
+            if any(k in commands for k in self.vertical_names) and not self.vertical_timer:
+                self.vertical_timer = self.create_timer(
+                    self.timer_delay, self._gen_vertical_timer_cb())
+                self.get_logger().info('Scheduled vertical idle timer')
 
         out_msg = String()
         out_msg.data = cmd_str
         self.publisher_.publish(out_msg)
 
-    def _gen_timer_cb(self, cmds):
-        """Create a one-shot timer callback that re-publishes neutral commands."""
-        msg = String()
-        msg.data = ','.join(f'{k}={v}' for k, v in cmds.items())
+    def _gen_lateral_timer_cb(self):
+        """Create a one-shot timer callback that re-publishes neutral commands for lateral motors."""
         def _cb():
+            if self.lateral_timer:
+                self.lateral_timer.cancel()
+                self.lateral_timer = None
+            msg = String()
+            msg.data = ','.join(f'{k}=1500' for k in sorted(self.lateral_names))
             self.publisher_.publish(msg)
-            self.get_logger().info('Executing idle timer')
+            self.get_logger().info('Executing idle timer for lateral motors')
+        return _cb
+
+    def _gen_vertical_timer_cb(self):
+        """Create a one-shot timer callback that re-publishes neutral commands for vertical motors."""
+        def _cb():
+            if self.vertical_timer:
+                self.vertical_timer.cancel()
+                self.vertical_timer = None
+            msg = String()
+            msg.data = ','.join(f'{k}=1500' for k in sorted(self.vertical_names))
+            self.publisher_.publish(msg)
+            self.get_logger().info('Executing idle timer for vertical motors')
         return _cb
 
 

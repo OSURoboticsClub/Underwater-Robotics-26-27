@@ -5,10 +5,8 @@ from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    port = LaunchConfiguration('port')
-
     return LaunchDescription([
-        DeclareLaunchArgument('port', default_value=port),
+        DeclareLaunchArgument('port', default_value='/dev/ttyUSB0'),
         Node(
             package='rov_ctrl_sys',
             executable='motor_controller',

@@ -13,6 +13,14 @@ def clamp(num, min_value, max_value):
     return max(min_value, min(max_value, num))
 
 
+def apply_deadzone(val, threshold):
+    """Zero out values within threshold and smoothly rescale beyond it."""
+    if abs(val) <= threshold:
+        return 0.0
+    sign = 1.0 if val > 0 else -1.0
+    return sign * ((abs(val) - threshold) / (1.0 - threshold))
+
+
 class JoyToMotor(Node):
     """Translate joystick input into a TwistStamped velocity command.
 
@@ -60,6 +68,9 @@ class JoyToMotor(Node):
         self.declare_parameter('frame_id', 'base_link')
         self.frame_id = self.get_parameter('frame_id').value
 
+        self.declare_parameter('deadzone', 0.05)
+        self.deadzone = float(self.get_parameter('deadzone').value)
+
         self._params = {}
 
         # Speed caps (applied as final clamp on each axis, range 0‒1)
@@ -83,6 +94,7 @@ class JoyToMotor(Node):
         # ---- Startup logging ----
         self.get_logger().info('Parameters:')
         self.get_logger().info(f'  frame_id:      {self.frame_id}')
+        self.get_logger().info(f'  deadzone:      {self.deadzone}')
         self.get_logger().info(f'  lateral_cap:   {self._params["lateral_cap"]}')
         self.get_logger().info(f'  vertical_cap:  {self._params["vertical_cap"]}')
         self.get_logger().info(f'  x_mod:         {self._params["x_mod"]}')
@@ -98,7 +110,18 @@ class JoyToMotor(Node):
     # ------------------------------------------------------------------
     def _on_params_changed(self, params):
         for p in params:
-            if p.name in self._params:
+            if p.name == 'allow_rolling':
+                if p.type_ != Parameter.Type.BOOL:
+                    return SetParametersResult(successful=False, reason='allow_rolling must be boolean')
+            elif p.name == 'frame_id':
+                if p.type_ != Parameter.Type.STRING:
+                    return SetParametersResult(successful=False, reason='frame_id must be a string')
+            elif p.name == 'deadzone':
+                if p.type_ not in (Parameter.Type.DOUBLE, Parameter.Type.INTEGER):
+                    return SetParametersResult(successful=False, reason='deadzone must be numeric')
+                if p.value < 0.0 or p.value >= 1.0:
+                    return SetParametersResult(successful=False, reason='deadzone must be in [0, 1)')
+            elif p.name in self._params:
                 if p.type_ not in (Parameter.Type.DOUBLE, Parameter.Type.INTEGER):
                     return SetParametersResult(
                         successful=False,
@@ -109,7 +132,16 @@ class JoyToMotor(Node):
                         reason='scalars must be nonnegative')
 
         for p in params:
-            if p.name in self._params:
+            if p.name == 'allow_rolling':
+                self.allow_rolling = bool(p.value)
+                self.get_logger().info(f'Set allow_rolling to: {self.allow_rolling}')
+            elif p.name == 'frame_id':
+                self.frame_id = str(p.value)
+                self.get_logger().info(f'Set frame_id to: {self.frame_id}')
+            elif p.name == 'deadzone':
+                self.deadzone = float(p.value)
+                self.get_logger().info(f'Set deadzone to: {self.deadzone}')
+            elif p.name in self._params:
                 self._params[p.name] = float(p.value)
                 self.get_logger().info(f'Set {p.name} to: {float(p.value)}')
 
@@ -143,38 +175,43 @@ class JoyToMotor(Node):
     # msg.buttons[9] = left stick press
     # msg.buttons[10] = right stick press
     def _joy_callback(self, msg):
+        def get_axis(idx, default=0.0):
+            return float(msg.axes[idx]) if idx < len(msg.axes) else default
+
         # --- Trigger latching (triggers report 0.0 until first press) ---
-        if (not self.rtrigger_been_pressed) and msg.axes[5] != 0.0:
+        rt = get_axis(5, 1.0)
+        lt = get_axis(2, 1.0)
+        if (not self.rtrigger_been_pressed) and rt != 0.0:
             self.rtrigger_been_pressed = True
-        if (not self.ltrigger_been_pressed) and msg.axes[2] != 0.0:
+        if (not self.ltrigger_been_pressed) and lt != 0.0:
             self.ltrigger_been_pressed = True
 
-        # --- Raw axis extraction ---
-        # forward / back  (left stick Y)
-        z = msg.axes[1]
-        # left / right    (left stick X)
-        x = msg.axes[0]
-        # yaw             (right stick X)
-        yaw = msg.axes[3]
+        # --- Raw axis extraction with deadzone ---
+        # forward / back  (left stick Y) -> maps to linear.x
+        z = apply_deadzone(get_axis(1), self.deadzone)
+        # left / right    (left stick X) -> maps to linear.y
+        x = apply_deadzone(get_axis(0), self.deadzone)
+        # yaw             (right stick X) -> maps to angular.z
+        yaw = apply_deadzone(get_axis(3), self.deadzone)
 
         # Roll / pitch from d-pad (if enabled)
         if self.allow_rolling:
-            roll = msg.axes[6]
-            pitch = msg.axes[7]
+            roll = get_axis(6, 0.0)
+            pitch = get_axis(7, 0.0)
         else:
             roll = 0.0
             pitch = 0.0
 
-        # Vertical from triggers
+        # Vertical from triggers -> maps to linear.z
         if not self.ltrigger_been_pressed and not self.rtrigger_been_pressed:
             y = 0.0
         elif not self.ltrigger_been_pressed and self.rtrigger_been_pressed:
-            y = -1 * ((msg.axes[5] - 1.0) / 2.0)
+            y = -1.0 * ((rt - 1.0) / 2.0)
         elif self.ltrigger_been_pressed and not self.rtrigger_been_pressed:
-            y = (msg.axes[2] - 1.0) / 2.0
+            y = (lt - 1.0) / 2.0
         else:
-            y = ((msg.axes[2] - 1.0) / 2.0) - ((msg.axes[5] - 1.0) / 2.0)
-        y = clamp(y, -1.0, 1.0)
+            y = ((lt - 1.0) / 2.0) - ((rt - 1.0) / 2.0)
+        y = apply_deadzone(clamp(y, -1.0, 1.0), self.deadzone)
 
         # --- Apply per-axis scaling ---
         z *= self._params['z_mod']
