@@ -344,7 +344,23 @@ You have two local simulation modes available:
 
 ---
 
-### Ubuntu Linux Setup Guide (Ubuntu 22.04 LTS)
+### Ubuntu Linux Setup Guide (Ubuntu 22.04 / 24.04 LTS)
+
+#### 1-Click Automated Setup (Recommended)
+We provide an automated setup script that installs ROS 2 Humble, Godot 4, Python dependencies, builds `ros2_ws`, and compiles `ros2_for_godot` for your laptop's CPU architecture (`x86_64` or `arm64`):
+
+```bash
+cd ~/Underwater-Robotics-26-27
+./setup_ubuntu.sh
+```
+
+Once complete, run either:
+- `./run_groundstation.sh` — Launches the integrated 3D Godot ocean sim & UI
+- `./run_sim.sh` — Launches the full ROS 2 Python simulator + Godot UI
+
+---
+
+#### Manual Setup (Step-by-Step)
 
 #### 1. System Dependencies & ROS 2 Humble
 Install ROS 2 Humble following the standard OSRF repository instructions:

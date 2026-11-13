@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # run_groundstation.sh - Launch Godot Groundstation UI Portably
-# Supports macOS (Apple Silicon / Intel) and Ubuntu/Linux
+# Supports macOS (Apple Silicon / Intel) and Ubuntu/Linux (x86_64 / arm64)
 # ==============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -37,7 +37,45 @@ elif [ -n "$AMENT_PREFIX_PATH" ]; then
     export LD_LIBRARY_PATH="/opt/ros/humble/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
 
-# 2. Locate Godot Executable
+# 2. Check and auto-compile GDExtension library if missing for current architecture
+OS_NAME="$(uname -s)"
+ARCH_NAME="$(uname -m)"
+
+NEEDED_LIB=""
+if [ "$OS_NAME" = "Linux" ]; then
+    NEEDED_LIB="$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/linux.${ARCH_NAME}/libros2_for_godot.so"
+elif [ "$OS_NAME" = "Darwin" ]; then
+    NEEDED_LIB="$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/macos/libros2_for_godot.dylib"
+fi
+
+if [ -n "$NEEDED_LIB" ] && [ ! -f "$NEEDED_LIB" ]; then
+    echo "================================================================="
+    echo "GDExtension library missing for $OS_NAME ($ARCH_NAME)."
+    echo "Auto-compiling ros2_for_godot for your architecture..."
+    echo "================================================================="
+
+    # Ensure submodule is initialized
+    if [ ! -f "$SCRIPT_DIR/underwater-robotics-groundstation/ros2-for-godot/godot-cpp/CMakeLists.txt" ]; then
+        (cd "$SCRIPT_DIR" && git submodule update --init --recursive)
+    fi
+
+    (
+        cd "$SCRIPT_DIR/underwater-robotics-groundstation/ros2-for-godot" || exit 1
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${AMENT_PREFIX_PATH:-/opt/ros/humble}"
+        cmake --build build -j"$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)"
+
+        if [ "$OS_NAME" = "Linux" ]; then
+            mkdir -p "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/linux.${ARCH_NAME}"
+            cp build/bin/libros2_for_godot.so "$NEEDED_LIB"
+        elif [ "$OS_NAME" = "Darwin" ]; then
+            mkdir -p "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/macos"
+            cp build/bin/libros2_for_godot.dylib "$NEEDED_LIB"
+        fi
+    )
+    echo "ros2_for_godot built successfully!"
+fi
+
+# 3. Locate Godot Executable
 find_godot() {
     # Check explicitly set environment variable
     if [ -n "$GODOT_BIN" ] && [ -x "$GODOT_BIN" ]; then
