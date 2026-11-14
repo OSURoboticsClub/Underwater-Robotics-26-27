@@ -138,9 +138,21 @@ Outputs are clamped to standard ESC PWM ranges (1100 µs full reverse, 1500 µs 
 | **Camera Reset** | `Backspace` |
 | **Toggle Dual Spotlights** | `F` (or `E` then `↑` / `↓` for intensity) |
 | **Dome Light Intensity** | `D` then `↑` / `↓` |
+| **Restart Practice Course** | `R` (or Gamepad `Start` / `Back`) |
 
-### Mode Switching
-- Click the **`3D Simulator Mode [ON]` / `Live ROS 2 Mode [ON]`** button in the top-right corner to toggle between the simulated 3D ocean environment and the live camera stream on the fly.
+### Mode Switching & Driving Practice Course
+- **Mode Toggle**: Click **`3D Simulator Mode [ON]` / `Live ROS 2 Mode [ON]`** in the top right to toggle between the 3D course and live ROS 2 camera stream.
+- **Interactive Obstacle Course (Practice Driving)**:
+  - **Obstacle 1: Slalom Pylons**: 4 tall vertical pillars with hazard markings. Requires zig-zag steering.
+  - **Obstacle 2: Inspection Gate 1 (Shallow)**: Solid physical frame with amber beacon. Pass through center to clear (beacon turns neon green).
+  - **Obstacle 3: Subsea Pipeline Fly-Under**: Elevated horizontal pipe on concrete pilings. Requires diving beneath $Y = -5.5\text{m}$ to pass without hitting the pipe or seabed.
+  - **Obstacle 4: Inspection Gate 2 (Deep & Angled)**: Near seabed ($Y = -7.5\text{m}$) rotated $22^\circ$. Tests simultaneous heave and yaw alignment.
+  - **Obstacle 5: Boulder Alley**: Narrow passage bordered by massive seabed rocks with solid sphere collisions.
+  - **Obstacle 6: Finish Gate 3**: High-power cyan beacon arch that stops the lap timer and confirms completion.
+- **Pilot Cockpit HUD**:
+  - Live Gate progress (`Gate: X/3`), collision counter (`Hits: X`), lap timer, depth tape, and velocity.
+  - Visual flash and collision warning when striking any obstacle.
+  - Press `R` at any time to instantly reset the ROV and course.
 
 ---
 

@@ -1,8 +1,9 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://lw302dx0xh7f" path="res://sim/sim_rov.gd" id="1_rov"]
-[ext_resource type="Script" uid="uid://crhkgqvl251du" path="res://sim/sim_crab.gd" id="2_crab"]
-[ext_resource type="Script" uid="uid://8b5aq1fgm8nn" path="res://sim/sim_fish.gd" id="3_fish"]
+[ext_resource type="Script" path="res://sim/sim_rov.gd" id="1_rov"]
+[ext_resource type="Script" path="res://sim/sim_crab.gd" id="2_crab"]
+[ext_resource type="Script" path="res://sim/sim_fish.gd" id="3_fish"]
+[ext_resource type="Script" path="res://sim/sim_gate.gd" id="4_gate"]
 
 [sub_resource type="Environment" id="Environment_ocean"]
 background_mode = 1
@@ -12,52 +13,148 @@ ambient_light_color = Color(0.06, 0.22, 0.32, 1)
 ambient_light_energy = 0.85
 fog_enabled = true
 fog_light_color = Color(0.02, 0.12, 0.22, 1)
-fog_density = 0.045
+fog_density = 0.035
 fog_sky_affect = 0.0
 
 [sub_resource type="StandardMaterial3D" id="Mat_Seabed"]
-albedo_color = Color(0.22, 0.38, 0.32, 1)
+albedo_color = Color(0.2, 0.32, 0.28, 1)
 roughness = 0.95
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_seabed"]
 material = SubResource("Mat_Seabed")
-size = Vector2(120, 120)
+size = Vector2(160, 240)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_floor"]
 
-[sub_resource type="StandardMaterial3D" id="Mat_PipeYellow"]
-albedo_color = Color(0.92, 0.72, 0.12, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Pylon"]
+albedo_color = Color(0.95, 0.75, 0.1, 1)
+metallic = 0.3
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pylon"]
+material = SubResource("Mat_Pylon")
+top_radius = 0.45
+bottom_radius = 0.45
+height = 10.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pylon"]
+height = 10.0
+radius = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_GateBar"]
+albedo_color = Color(0.95, 0.42, 0.08, 1)
 metallic = 0.4
 roughness = 0.4
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_pipe"]
-material = SubResource("Mat_PipeYellow")
-top_radius = 0.4
-bottom_radius = 0.4
-height = 60.0
+[sub_resource type="StandardMaterial3D" id="Mat_FinishBar"]
+albedo_color = Color(0.1, 0.7, 0.95, 1)
+metallic = 0.5
+roughness = 0.3
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_pipe"]
-height = 60.0
-radius = 0.4
+[sub_resource type="StandardMaterial3D" id="Mat_Pipe"]
+albedo_color = Color(0.25, 0.55, 0.65, 1)
+metallic = 0.6
+roughness = 0.35
 
-[sub_resource type="StandardMaterial3D" id="Mat_Gate"]
-albedo_color = Color(0.95, 0.45, 0.1, 1)
-metallic = 0.3
-roughness = 0.5
+[sub_resource type="CylinderMesh" id="CylinderMesh_pipe_main"]
+material = SubResource("Mat_Pipe")
+top_radius = 0.5
+bottom_radius = 0.5
+height = 36.0
 
-[sub_resource type="TorusMesh" id="TorusMesh_gate"]
-material = SubResource("Mat_Gate")
-inner_radius = 1.6
-outer_radius = 1.9
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pipe_main"]
+height = 36.0
+radius = 0.5
 
-[sub_resource type="StandardMaterial3D" id="Mat_Rock"]
-albedo_color = Color(0.28, 0.34, 0.3, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Concrete"]
+albedo_color = Color(0.35, 0.38, 0.36, 1)
 roughness = 0.9
 
-[sub_resource type="SphereMesh" id="SphereMesh_rock"]
+[sub_resource type="BoxMesh" id="BoxMesh_pillar"]
+material = SubResource("Mat_Concrete")
+size = Vector3(0.9, 6.0, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pillar"]
+size = Vector3(0.9, 6.0, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Rock"]
+albedo_color = Color(0.24, 0.28, 0.26, 1)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_rock1"]
 material = SubResource("Mat_Rock")
-radius = 1.2
-height = 1.4
+radius = 2.2
+height = 3.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rock1"]
+radius = 2.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_rock2"]
+material = SubResource("Mat_Rock")
+radius = 2.5
+height = 4.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rock2"]
+radius = 2.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_rock3"]
+material = SubResource("Mat_Rock")
+radius = 2.0
+height = 3.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rock3"]
+radius = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_g1_hbar"]
+material = SubResource("Mat_GateBar")
+size = Vector3(3.8, 0.25, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g1_hbar"]
+size = Vector3(3.8, 0.25, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g1_vbar"]
+material = SubResource("Mat_GateBar")
+size = Vector3(0.25, 2.8, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g1_vbar"]
+size = Vector3(0.25, 2.8, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g1_trigger"]
+size = Vector3(3.2, 2.5, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g2_hbar"]
+material = SubResource("Mat_GateBar")
+size = Vector3(3.2, 0.25, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g2_hbar"]
+size = Vector3(3.2, 0.25, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g2_vbar"]
+material = SubResource("Mat_GateBar")
+size = Vector3(0.25, 2.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g2_vbar"]
+size = Vector3(0.25, 2.4, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g2_trigger"]
+size = Vector3(2.6, 2.1, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g3_hbar"]
+material = SubResource("Mat_FinishBar")
+size = Vector3(3.4, 0.25, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g3_hbar"]
+size = Vector3(3.4, 0.25, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g3_vbar"]
+material = SubResource("Mat_FinishBar")
+size = Vector3(0.25, 2.6, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g3_vbar"]
+size = Vector3(0.25, 2.6, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g3_trigger"]
+size = Vector3(2.8, 2.3, 0.6)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Crab"]
 albedo_color = Color(0.85, 0.25, 0.12, 1)
@@ -128,7 +225,7 @@ light_color = Color(0.45, 0.82, 0.95, 1)
 light_energy = 0.75
 
 [node name="Seabed" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, -50)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Seabed"]
 mesh = SubResource("PlaneMesh_seabed")
@@ -136,38 +233,293 @@ mesh = SubResource("PlaneMesh_seabed")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Seabed"]
 shape = SubResource("WorldBoundaryShape3D_floor")
 
-[node name="Pipeline" type="StaticBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -9.6, -14)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Pipeline"]
-mesh = SubResource("CylinderMesh_pipe")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Pipeline"]
-shape = SubResource("CylinderShape3D_pipe")
-
-[node name="InspectionGate" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8.2, -22)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="InspectionGate"]
-mesh = SubResource("TorusMesh_gate")
-
-[node name="BeaconLight" type="OmniLight3D" parent="InspectionGate"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
-light_color = Color(1, 0.2, 0.2, 1)
-light_energy = 2.0
+[node name="StartBeaconLeft" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -3.5, -1)
+light_color = Color(0.1, 1, 0.4, 1)
+light_energy = 2.5
 omni_range = 8.0
 
-[node name="Rock1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.2, 0, 0, 0, 0.8, 0, 0, 0, 1.4, -4, -9.8, -8)
-mesh = SubResource("SphereMesh_rock")
+[node name="StartBeaconRight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -3.5, -1)
+light_color = Color(0.1, 1, 0.4, 1)
+light_energy = 2.5
+omni_range = 8.0
 
-[node name="Rock2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.8, 0, 0, 0, 1.1, 0, 0, 0, 1.5, 6, -9.7, -12)
-mesh = SubResource("SphereMesh_rock")
+[node name="Pylon1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, -5, -9)
 
-[node name="Rock3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.0, 0, 0, 0, 0.6, 0, 0, 0, 0.9, 1, -9.8, -18)
-mesh = SubResource("SphereMesh_rock")
+[node name="Mesh" type="MeshInstance3D" parent="Pylon1"]
+mesh = SubResource("CylinderMesh_pylon")
+
+[node name="Collision" type="CollisionShape3D" parent="Pylon1"]
+shape = SubResource("CylinderShape3D_pylon")
+
+[node name="Beacon" type="OmniLight3D" parent="Pylon1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_color = Color(1, 0.8, 0.1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="Pylon2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, -5, -17)
+
+[node name="Mesh" type="MeshInstance3D" parent="Pylon2"]
+mesh = SubResource("CylinderMesh_pylon")
+
+[node name="Collision" type="CollisionShape3D" parent="Pylon2"]
+shape = SubResource("CylinderShape3D_pylon")
+
+[node name="Beacon" type="OmniLight3D" parent="Pylon2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_color = Color(1, 0.8, 0.1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="Pylon3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, -5, -25)
+
+[node name="Mesh" type="MeshInstance3D" parent="Pylon3"]
+mesh = SubResource("CylinderMesh_pylon")
+
+[node name="Collision" type="CollisionShape3D" parent="Pylon3"]
+shape = SubResource("CylinderShape3D_pylon")
+
+[node name="Beacon" type="OmniLight3D" parent="Pylon3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_color = Color(1, 0.8, 0.1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="Pylon4" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, -5, -33)
+
+[node name="Mesh" type="MeshInstance3D" parent="Pylon4"]
+mesh = SubResource("CylinderMesh_pylon")
+
+[node name="Collision" type="CollisionShape3D" parent="Pylon4"]
+shape = SubResource("CylinderShape3D_pylon")
+
+[node name="Beacon" type="OmniLight3D" parent="Pylon4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_color = Color(1, 0.8, 0.1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="Gate1" type="Node3D" parent="." groups=["gates"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, -42)
+script = ExtResource("4_gate")
+gate_id = 1
+gate_name = "Gate 1 (Entry)"
+
+[node name="BeaconLight" type="OmniLight3D" parent="Gate1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+light_color = Color(1, 0.65, 0.1, 1)
+light_energy = 2.5
+omni_range = 8.0
+
+[node name="TriggerArea" type="Area3D" parent="Gate1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Gate1/TriggerArea"]
+shape = SubResource("BoxShape3D_g1_trigger")
+
+[node name="TopBar" type="StaticBody3D" parent="Gate1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate1/TopBar"]
+mesh = SubResource("BoxMesh_g1_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate1/TopBar"]
+shape = SubResource("BoxShape3D_g1_hbar")
+
+[node name="BottomBar" type="StaticBody3D" parent="Gate1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate1/BottomBar"]
+mesh = SubResource("BoxMesh_g1_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate1/BottomBar"]
+shape = SubResource("BoxShape3D_g1_hbar")
+
+[node name="LeftPost" type="StaticBody3D" parent="Gate1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate1/LeftPost"]
+mesh = SubResource("BoxMesh_g1_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate1/LeftPost"]
+shape = SubResource("BoxShape3D_g1_vbar")
+
+[node name="RightPost" type="StaticBody3D" parent="Gate1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate1/RightPost"]
+mesh = SubResource("BoxMesh_g1_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate1/RightPost"]
+shape = SubResource("BoxShape3D_g1_vbar")
+
+[node name="PipelineHazard" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.5, -55)
+
+[node name="MainPipe" type="StaticBody3D" parent="PipelineHazard"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="PipelineHazard/MainPipe"]
+mesh = SubResource("CylinderMesh_pipe_main")
+
+[node name="Col" type="CollisionShape3D" parent="PipelineHazard/MainPipe"]
+shape = SubResource("CylinderShape3D_pipe_main")
+
+[node name="PillarLeft" type="StaticBody3D" parent="PipelineHazard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2.8, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="PipelineHazard/PillarLeft"]
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="Col" type="CollisionShape3D" parent="PipelineHazard/PillarLeft"]
+shape = SubResource("BoxShape3D_pillar")
+
+[node name="PillarRight" type="StaticBody3D" parent="PipelineHazard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -2.8, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="PipelineHazard/PillarRight"]
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="Col" type="CollisionShape3D" parent="PipelineHazard/PillarRight"]
+shape = SubResource("BoxShape3D_pillar")
+
+[node name="Gate2" type="Node3D" parent="." groups=["gates"]]
+transform = Transform3D(0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.939693, 3, -7.2, -70)
+script = ExtResource("4_gate")
+gate_id = 2
+gate_name = "Gate 2 (Deep Angled)"
+
+[node name="BeaconLight" type="OmniLight3D" parent="Gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+light_color = Color(1, 0.65, 0.1, 1)
+light_energy = 2.5
+omni_range = 8.0
+
+[node name="TriggerArea" type="Area3D" parent="Gate2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Gate2/TriggerArea"]
+shape = SubResource("BoxShape3D_g2_trigger")
+
+[node name="TopBar" type="StaticBody3D" parent="Gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate2/TopBar"]
+mesh = SubResource("BoxMesh_g2_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate2/TopBar"]
+shape = SubResource("BoxShape3D_g2_hbar")
+
+[node name="BottomBar" type="StaticBody3D" parent="Gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate2/BottomBar"]
+mesh = SubResource("BoxMesh_g2_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate2/BottomBar"]
+shape = SubResource("BoxShape3D_g2_hbar")
+
+[node name="LeftPost" type="StaticBody3D" parent="Gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.45, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate2/LeftPost"]
+mesh = SubResource("BoxMesh_g2_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate2/LeftPost"]
+shape = SubResource("BoxShape3D_g2_vbar")
+
+[node name="RightPost" type="StaticBody3D" parent="Gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.45, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate2/RightPost"]
+mesh = SubResource("BoxMesh_g2_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate2/RightPost"]
+shape = SubResource("BoxShape3D_g2_vbar")
+
+[node name="Rock1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, -8.2, -82)
+
+[node name="Mesh" type="MeshInstance3D" parent="Rock1"]
+mesh = SubResource("SphereMesh_rock1")
+
+[node name="Collision" type="CollisionShape3D" parent="Rock1"]
+shape = SubResource("SphereShape3D_rock1")
+
+[node name="Rock2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4, -8, -88)
+
+[node name="Mesh" type="MeshInstance3D" parent="Rock2"]
+mesh = SubResource("SphereMesh_rock2")
+
+[node name="Collision" type="CollisionShape3D" parent="Rock2"]
+shape = SubResource("SphereShape3D_rock2")
+
+[node name="Rock3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -7.5, -94)
+
+[node name="Mesh" type="MeshInstance3D" parent="Rock3"]
+mesh = SubResource("SphereMesh_rock3")
+
+[node name="Collision" type="CollisionShape3D" parent="Rock3"]
+shape = SubResource("SphereShape3D_rock3")
+
+[node name="Gate3" type="Node3D" parent="." groups=["gates"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.5, -106)
+script = ExtResource("4_gate")
+gate_id = 3
+gate_name = "Gate 3 (Finish)"
+
+[node name="BeaconLight" type="OmniLight3D" parent="Gate3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+light_color = Color(0.1, 0.7, 1, 1)
+light_energy = 3.5
+omni_range = 14.0
+
+[node name="TriggerArea" type="Area3D" parent="Gate3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Gate3/TriggerArea"]
+shape = SubResource("BoxShape3D_g3_trigger")
+
+[node name="TopBar" type="StaticBody3D" parent="Gate3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate3/TopBar"]
+mesh = SubResource("BoxMesh_g3_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate3/TopBar"]
+shape = SubResource("BoxShape3D_g3_hbar")
+
+[node name="BottomBar" type="StaticBody3D" parent="Gate3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate3/BottomBar"]
+mesh = SubResource("BoxMesh_g3_hbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate3/BottomBar"]
+shape = SubResource("BoxShape3D_g3_hbar")
+
+[node name="LeftPost" type="StaticBody3D" parent="Gate3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate3/LeftPost"]
+mesh = SubResource("BoxMesh_g3_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate3/LeftPost"]
+shape = SubResource("BoxShape3D_g3_vbar")
+
+[node name="RightPost" type="StaticBody3D" parent="Gate3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Gate3/RightPost"]
+mesh = SubResource("BoxMesh_g3_vbar")
+
+[node name="Col" type="CollisionShape3D" parent="Gate3/RightPost"]
+shape = SubResource("BoxShape3D_g3_vbar")
 
 [node name="Crab1" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -9.8, -7)
@@ -185,7 +537,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.05, -0.2)
 mesh = SubResource("SphereMesh_claw")
 
 [node name="Crab2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -9.8, -11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -9.8, -60)
 script = ExtResource("2_crab")
 
 [node name="Body" type="MeshInstance3D" parent="Crab2"]
@@ -200,7 +552,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.05, -0.2)
 mesh = SubResource("SphereMesh_claw")
 
 [node name="Fish1" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -5, -20)
 script = ExtResource("3_fish")
 
 [node name="Body" type="MeshInstance3D" parent="Fish1"]
@@ -212,7 +564,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
 mesh = SubResource("PrismMesh_fish_tail")
 
 [node name="Fish2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4, -65)
 script = ExtResource("3_fish")
 
 [node name="Body" type="MeshInstance3D" parent="Fish2"]
@@ -224,12 +576,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
 mesh = SubResource("PrismMesh_fish_tail")
 
 [node name="MarineSnow" type="CPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, -12)
-amount = 120
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, -50)
+amount = 180
 lifetime = 6.0
 mesh = SubResource("SphereMesh_snow")
 emission_shape = 3
-emission_box_extents = Vector3(25, 6, 25)
+emission_box_extents = Vector3(25, 6, 60)
 gravity = Vector3(0, -0.15, 0)
 initial_velocity_min = 0.05
 initial_velocity_max = 0.15
@@ -261,18 +613,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.45)
 current = true
 fov = 68.0
 near = 0.1
-far = 80.0
+far = 90.0
+
+[node name="HudLabel" type="Label3D" parent="ROV/GimbalPan/GimbalTilt/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, -1.0)
+pixel_size = 0.0016
+no_depth_test = true
+render_priority = 2
+outline_render_priority = 1
+modulate = Color(0.85, 0.95, 1, 0.95)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "PRACTICE COURSE: FLY FORWARD TO START"
+font_size = 22
+outline_size = 6
 
 [node name="LightLeft" type="SpotLight3D" parent="ROV/GimbalPan/GimbalTilt"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0, 0)
 light_color = Color(0.95, 0.98, 1, 1)
 light_energy = 0.0
-spot_range = 28.0
+spot_range = 32.0
 spot_angle = 35.0
 
 [node name="LightRight" type="SpotLight3D" parent="ROV/GimbalPan/GimbalTilt"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0, 0)
 light_color = Color(0.95, 0.98, 1, 1)
 light_energy = 0.0
-spot_range = 28.0
+spot_range = 32.0
 spot_angle = 35.0
