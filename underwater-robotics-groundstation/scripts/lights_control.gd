@@ -18,15 +18,10 @@ func _ready() -> void:
 
 # this is only triggered by a mouse click, not toggling in code.
 func toggle_exterior():
-	#var output : Dictionary[String, Variant] = {}
-	#output["ext_lights"] = int(exterior_button.button_pressed)
-	#SignalBus.outgoing_data.emit("servo", output)
 	SignalBus.publish_lights_data.emit("e")
-	pass
-	
+
 func toggle_dome():
 	SignalBus.publish_lights_data.emit("d")
-	pass
 
 func update_brightness(changed: bool):
 	if !changed: # The value wasnt acctually changed

@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://co7vy00pok1io"]
+
+[ext_resource type="Script" uid="uid://beyxydrdclx5o" path="res://scripts/lights_control.gd" id="1_yah0p"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1rr46"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+color = Color(0.74, 0.34114003, 0.014799986, 1)
+grow_begin = -5.0
+grow_end = -5.0
+thickness = 2
+
+[node name="Lights" type="VBoxContainer" unique_id=193486279]
+script = ExtResource("1_yah0p")
+
+[node name="ExteriorLights" type="VBoxContainer" parent="." unique_id=402883336]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="ExteriorLights" unique_id=1168619262]
+layout_mode = 2
+text = "Exterior Lights"
+
+[node name="EnabledButton" type="CheckButton" parent="ExteriorLights" unique_id=2067830353]
+layout_mode = 2
+text = "Enabled"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ExteriorLights" unique_id=1801589770]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ExteriorLights/HBoxContainer" unique_id=16507620]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Brightness"
+
+[node name="HSlider" type="HSlider" parent="ExteriorLights/HBoxContainer" unique_id=762147770]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+editable = false
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=344928530]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
+
+[node name="DomeLights" type="VBoxContainer" parent="." unique_id=1246676779]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="DomeLights" unique_id=670394306]
+layout_mode = 2
+text = "Dome Lights"
+
+[node name="EnabledButton" type="CheckButton" parent="DomeLights" unique_id=696731916]
+layout_mode = 2
+text = "Enabled"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DomeLights" unique_id=495633404]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DomeLights/HBoxContainer" unique_id=415176205]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Brightness"
+
+[node name="HSlider" type="HSlider" parent="DomeLights/HBoxContainer" unique_id=452679533]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+editable = false
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3

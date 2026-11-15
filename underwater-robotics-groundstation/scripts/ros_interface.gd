@@ -36,19 +36,6 @@ func _ready():
 		SignalBus.error.emit("Failed to create subscription to '/joy_to_servo'")
 	else:
 		print("Subscription created: ", joy_servo_publisher)
-		
-		
-	"""joy_servo_subscription = create_subscription(
-		"std_msgs/msg/String",
-		"/servo_command",
-		_on_message_received,
-		10
-	)
-	if joy_servo_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/servo_command'")
-	else:
-		print("Subscription created: ", joy_servo_subscription)"""
-		
 	
 	video_subscription = create_subscription(
 		"sensor_msgs/msg/Image",
@@ -60,7 +47,6 @@ func _ready():
 		SignalBus.error.emit("Failed to create subscription to '/image_raw'")
 	else:
 		print("Subscription created: ", video_subscription)
-	
 	
 	motor_subscription = create_subscription(
 		"std_msgs/msg/String",
@@ -122,8 +108,8 @@ func _process(_delta: float) -> void:
 	#if spin_duration_ms > 5.0:
 	#	print("spin_some duration: ", spin_duration_ms, " ms")
 
-	if Input.is_key_pressed(KEY_P):
-		SignalBus.error.emit("New Test Error")
+	#if Input.is_key_pressed(KEY_P):
+	#	SignalBus.error.emit("New Test Error")
 	
 	# Get inputs and publish them to appropriate topics
 	_handle_keyboard_inputs()
@@ -161,16 +147,16 @@ func _handle_keyboard_inputs() -> void:
 		msg.data = ",".join(inputs)
 		key_states_publisher.publish(msg)
 	#list of keys the are used in other nodes:
-	# C - camera
-	# D - dome lights
-	# E - exterior lights
+	# C - set control to camera
+	# D - set control to dome lights
+	# E - set control to exterior lights
 	# UP - camera up
 	# DOWN - camera down
 	# LEFT - camera left
 	# RIGHT - camera right
-	# BACKSPACE
-	# X
-	# Y
+	# BACKSPACE - reset
+	# X - reset camera x (used with BACKSPACE)
+	# Y - reset camera y (used with BACKSPACE)
 
 
 func _on_message_received(msg):

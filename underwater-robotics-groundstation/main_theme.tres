@@ -256,6 +256,7 @@ OptionButton/styles/hover = SubResource("StyleBoxFlat_button_hover")
 OptionButton/styles/normal = SubResource("StyleBoxFlat_button")
 OptionButton/styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_sidebar")
+PopupMenu/styles/hover = null
 ProgressBar/styles/background = SubResource("StyleBoxFlat_progress_track")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_progress_fill")
 TabContainer/colors/font_hovered_color = Color(1, 1, 1, 1)

@@ -47,10 +47,12 @@ layout_mode = 2
 [node name="SavedProfiles" type="OptionButton" parent="ProfileControls/LoadRow" unique_id=2034729552]
 layout_mode = 2
 size_flags_horizontal = 3
+search_bar_enabled = true
 
-[node name="LoadButton" type="Button" parent="ProfileControls/LoadRow" unique_id=730156869]
+[node name="DeleteButton" type="Button" parent="ProfileControls/LoadRow" unique_id=730156869]
+visible = false
 layout_mode = 2
-text = "Load"
+text = "Delete"
 
 [node name="ResetButton" type="Button" parent="." unique_id=149399519]
 layout_mode = 2
@@ -59,4 +61,10 @@ text = "Reset to Defaults"
 [node name="StatusLabel" type="Label" parent="." unique_id=1572718914]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Project default keybinds are active."
+text = "Default mapping is active and cannot be edited."
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=323734634]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(654, 100)
+dialog_text = "Are you sure you want to delete this remapped profile?"

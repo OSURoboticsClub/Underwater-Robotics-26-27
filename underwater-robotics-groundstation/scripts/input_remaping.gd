@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 const INPUT_BINDINGS_PATH := "user://input_bindings.cfg"
+const DEFAULT_PROFILE_NAME := "Default"
 const REMAPPABLE_ACTIONS: Array[StringName] = [
 	&"up",
 	&"down",
@@ -18,25 +19,27 @@ const REMAPPABLE_ACTIONS: Array[StringName] = [
 @onready var vbox: VBoxContainer = $ActionScroll/ActionList
 @onready var profile_name_input: LineEdit = $ProfileControls/SaveRow/ProfileNameInput
 @onready var saved_profiles: OptionButton = $ProfileControls/LoadRow/SavedProfiles
+@onready var delete_button: Button = $ProfileControls/LoadRow/DeleteButton
+@onready var confirmation_dialog: ConfirmationDialog = $ConfirmationDialog
 @onready var status_label: Label = $StatusLabel
 
 var current_remap: StringName = &""
 var remap_buttons: Dictionary[StringName, Button] = {}
+var active_profile_name: String = DEFAULT_PROFILE_NAME
 
 
 func _ready() -> void:
-	#TODO: save default controls as "Default", and when you try and change default
-	# it just creates a new setup.
-	profile_name_input.text = "Default"
-	_on_save_profile_pressed()
-	profile_name_input.text = ""
-	# How do you make it so that you cant edit the saved defaults.
+	_save_default_profile()
 	_build_controls()
 	$ProfileControls/SaveRow/SaveButton.pressed.connect(_on_save_profile_pressed)
-	$ProfileControls/LoadRow/LoadButton.pressed.connect(_on_load_profile_pressed)
+	#$ProfileControls/LoadRow/LoadButton.pressed.connect(_on_load_profile_pressed)
+	$ProfileControls/LoadRow/DeleteButton.pressed.connect(_on_delete_profile_pressed)
+	$ProfileControls/LoadRow/SavedProfiles.item_selected.connect(_on_load_profile_pressed) #TODO: this should work, i think, but its not
 	$ResetButton.pressed.connect(_on_reset_button_pressed)
+	confirmation_dialog.confirmed.connect(_delete_profile)
 	visibility_changed.connect(_on_visibility_changed)
-	_refresh_saved_profiles()
+	_set_active_profile(DEFAULT_PROFILE_NAME)
+	_refresh_saved_profiles(DEFAULT_PROFILE_NAME)
 
 
 func _build_controls() -> void:
@@ -55,6 +58,7 @@ func _build_controls() -> void:
 		label.text = snake_case_to_normal(String(action))
 		button.custom_minimum_size.x = 140.0
 		button.text = get_action_key_name(action)
+		button.disabled = active_profile_name == DEFAULT_PROFILE_NAME
 		button.pressed.connect(_begin_remap.bind(action, button))
 		hbox.add_child(label)
 		hbox.add_child(button)
@@ -86,6 +90,9 @@ func get_action_key_name(action_name: StringName) -> String:
 
 
 func _begin_remap(action: StringName, button: Button) -> void:
+	if active_profile_name == DEFAULT_PROFILE_NAME:
+		_show_status("The Default mapping cannot be edited. Save it under a new name first.")
+		return
 	_cancel_remap()
 	current_remap = action
 	button.text = "Press a key..."
@@ -124,6 +131,10 @@ func _on_visibility_changed() -> void:
 
 
 func remap_action_to_key(action_name: StringName, key_event: InputEventKey) -> void:
+	if active_profile_name == DEFAULT_PROFILE_NAME:
+		push_warning("Cannot edit the protected Default input mapping.")
+		_show_status("The Default mapping cannot be edited. Save it under a new name first.")
+		return
 	if not InputMap.has_action(action_name):
 		push_error("Cannot remap missing input action: %s" % action_name)
 		current_remap = &""
@@ -152,6 +163,21 @@ func remap_action_to_key(action_name: StringName, key_event: InputEventKey) -> v
 		% [snake_case_to_normal(String(action_name)), new_event.as_text()]
 	)
 
+func _on_delete_profile_pressed() -> void:
+	var profile_name := String(saved_profiles.get_item_metadata(saved_profiles.selected))
+	if profile_name != DEFAULT_PROFILE_NAME:
+		confirmation_dialog.visible = true
+	else:
+		_show_status("You can't delete the default binding")
+
+
+func _delete_profile() -> void:
+	_cancel_remap()
+	pass
+	#TODO: Actually delete the profile
+	# if ok then remove current profile
+	# save to file
+
 
 func _on_save_profile_pressed() -> void:
 	_cancel_remap()
@@ -159,17 +185,11 @@ func _on_save_profile_pressed() -> void:
 	if profile_name.is_empty():
 		_show_status("Enter a name for this mapping.")
 		return
+	if profile_name.to_lower() == DEFAULT_PROFILE_NAME.to_lower():
+		_show_status("The name Default is reserved. Choose another mapping name.")
+		return
 
-	var bindings: Dictionary = {}
-	for action: StringName in REMAPPABLE_ACTIONS:
-		if not InputMap.has_action(action):
-			continue
-		bindings[String(action)] = {}
-		for event in InputMap.action_get_events(action):
-			if event is InputEventKey:
-				bindings[String(action)] = _key_event_to_dictionary(event)
-				break
-
+	var bindings := _capture_input_bindings()
 	var config := ConfigFile.new()
 	var load_error := config.load(INPUT_BINDINGS_PATH)
 	if load_error != OK and load_error != ERR_FILE_NOT_FOUND:
@@ -185,16 +205,25 @@ func _on_save_profile_pressed() -> void:
 		return
 
 	_refresh_saved_profiles(profile_name)
+	_set_active_profile(profile_name)
 	_show_status("Saved mapping: %s" % profile_name)
 
 
-func _on_load_profile_pressed() -> void:
+#TODO: can i use the item int to get which one is loaded instead of the current way its done
+func _on_load_profile_pressed(_item: int) -> void:
 	_cancel_remap()
 	if saved_profiles.item_count == 0 or saved_profiles.selected < 0:
 		_show_status("Select a saved mapping to load.")
 		return
 
 	var profile_name := String(saved_profiles.get_item_metadata(saved_profiles.selected))
+	if profile_name == DEFAULT_PROFILE_NAME:
+		InputMap.load_from_project_settings()
+		_refresh_mapping_button_texts()
+		_set_active_profile(DEFAULT_PROFILE_NAME)
+		_show_status("Loaded the protected Default mapping.")
+		return
+
 	var config := ConfigFile.new()
 	var load_error := config.load(INPUT_BINDINGS_PATH)
 	if load_error != OK:
@@ -228,11 +257,17 @@ func _on_load_profile_pressed() -> void:
 		InputMap.action_add_event(action, key_event)
 
 	_refresh_mapping_button_texts()
+	_set_active_profile(profile_name)
 	_show_status("Loaded mapping: %s" % profile_name)
 
 
 func _refresh_saved_profiles(select_name: String = "") -> void:
 	saved_profiles.clear()
+	saved_profiles.add_item(DEFAULT_PROFILE_NAME)
+	saved_profiles.set_item_metadata(0, DEFAULT_PROFILE_NAME)
+	saved_profiles.select(0)
+	var profile_to_select := select_name if not select_name.is_empty() else DEFAULT_PROFILE_NAME
+
 	var config := ConfigFile.new()
 	var load_error := config.load(INPUT_BINDINGS_PATH)
 	if load_error == ERR_FILE_NOT_FOUND:
@@ -247,11 +282,72 @@ func _refresh_saved_profiles(select_name: String = "") -> void:
 	var profile_names := config.get_section_keys("profiles")
 	profile_names.sort()
 	for profile_name: String in profile_names:
+		if profile_name.to_lower() == DEFAULT_PROFILE_NAME.to_lower():
+			continue
 		var index := saved_profiles.item_count
 		saved_profiles.add_item(profile_name)
 		saved_profiles.set_item_metadata(index, profile_name)
-		if profile_name == select_name:
+		if profile_name == profile_to_select:
 			saved_profiles.select(index)
+	if saved_profiles.selected < 0:
+		saved_profiles.select(0)
+
+
+func _capture_input_bindings() -> Dictionary:
+	var bindings: Dictionary = {}
+	for action: StringName in REMAPPABLE_ACTIONS:
+		if not InputMap.has_action(action):
+			continue
+		bindings[String(action)] = {}
+		for event in InputMap.action_get_events(action):
+			if event is InputEventKey:
+				bindings[String(action)] = _key_event_to_dictionary(event)
+				break
+	return bindings
+
+
+func _capture_project_default_bindings() -> Dictionary:
+	var bindings: Dictionary = {}
+	for action: StringName in REMAPPABLE_ACTIONS:
+		var setting: Variant = ProjectSettings.get_setting("input/" + String(action), {})
+		if not setting is Dictionary:
+			push_warning("Ignoring invalid project input settings for action: %s" % action)
+			continue
+
+		bindings[String(action)] = {}
+		var events: Variant = setting.get("events", [])
+		if not events is Array:
+			push_warning("Ignoring invalid project input events for action: %s" % action)
+			continue
+		for event in events:
+			if event is InputEventKey:
+				bindings[String(action)] = _key_event_to_dictionary(event)
+				break
+	return bindings
+
+
+func _save_default_profile() -> void:
+	var config := ConfigFile.new()
+	var load_error := config.load(INPUT_BINDINGS_PATH)
+	if load_error != OK and load_error != ERR_FILE_NOT_FOUND:
+		push_error("Failed to read saved input mappings: %s" % load_error)
+		_show_status("Could not read saved mappings.")
+		return
+
+	config.set_value("profiles", DEFAULT_PROFILE_NAME, _capture_project_default_bindings())
+	var save_error := config.save(INPUT_BINDINGS_PATH)
+	if save_error != OK:
+		push_error(
+			"Failed to save the Default input mapping (%s): %s"
+			% [INPUT_BINDINGS_PATH, save_error]
+		)
+		_show_status("Could not save the Default mapping.")
+
+
+func _set_active_profile(profile_name: String) -> void:
+	active_profile_name = profile_name
+	for button: Button in remap_buttons.values():
+		button.disabled = active_profile_name == DEFAULT_PROFILE_NAME
 
 
 func _key_event_to_dictionary(key_event: InputEventKey) -> Dictionary:
@@ -285,9 +381,12 @@ func _clear_keyboard_bindings(action_name: StringName) -> void:
 
 
 func _on_reset_button_pressed() -> void:
+	#TODO: instead load the saved profile
 	_cancel_remap()
 	InputMap.load_from_project_settings()
 	_refresh_mapping_button_texts()
+	_set_active_profile(DEFAULT_PROFILE_NAME)
+	_refresh_saved_profiles(DEFAULT_PROFILE_NAME)
 	_show_status("Restored project default keybinds.")
 
 
