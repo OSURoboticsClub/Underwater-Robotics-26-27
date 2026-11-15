@@ -1,6 +1,6 @@
 Get UI light brightness controls to send data to ROS
-Reload defaults sets it to default profile
 Be able to delete a profile
 documentation
 in ROS nodes change from keys to an action name
-data label tool script
+
+Improve the status label for input remaping

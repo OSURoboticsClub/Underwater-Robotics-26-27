@@ -238,6 +238,7 @@ HSlider/icons/tick = ExtResource("1_tick")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
 HSlider/styles/slider = SubResource("StyleBoxFlat_slider_track")
+HSplitContainer/constants/separation = 6
 Label/colors/font_color = Color(0.886275, 0.901961, 0.921569, 1)
 Label/font_sizes/font_size = 24
 LineEdit/colors/caret_color = Color(1, 0.4627451, 0.023529412, 1)

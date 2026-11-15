@@ -62,7 +62,7 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(0.1, 0.1, 0.1, 0.3)
+bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_detail = 6
@@ -82,7 +82,7 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(0.1, 0.1, 0.1, 0.3)
+bg_color = Color(0, 0, 0, 1)
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 corner_detail = 6
@@ -125,6 +125,7 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="TabContainer" type="TabContainer" parent="HSplitContainer/MarginContainer" unique_id=1011071868]
+custom_minimum_size = Vector2(385, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 19
 current_tab = 0
