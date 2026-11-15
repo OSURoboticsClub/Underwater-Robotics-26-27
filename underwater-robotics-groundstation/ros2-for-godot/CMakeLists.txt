@@ -44,7 +44,7 @@ set(_ros_dir "")
 foreach(_path ${_ament_paths})
     if(EXISTS "${_path}/share/std_msgs/msg")
         set(_ros_dir "${_path}")
-        break
+        break()
     endif()
 endforeach()
 if(NOT _ros_dir)
