@@ -2,6 +2,7 @@ extends RosNode
 
 var key_states_publisher: RosPublisher
 var servo_publisher: RosPublisher
+var joy_servo_publisher: RosPublisher
 
 var motor_subscription: RosSubscription
 var servo_subscription: RosSubscription
@@ -26,6 +27,17 @@ func _ready():
 	else:
 		print("Subscription created: ", servo_subscription)
 	
+	joy_servo_publisher = create_publisher(
+		"sensor_msgs/msg/Joy",
+		"/joy",
+		10
+	)
+	if joy_servo_publisher == null:
+		SignalBus.error.emit("Failed to create subscription to '/joy_to_servo'")
+	else:
+		print("Subscription created: ", joy_servo_publisher)
+		
+		
 	"""joy_servo_subscription = create_subscription(
 		"std_msgs/msg/String",
 		"/servo_command",
@@ -84,6 +96,7 @@ func _ready():
 		print("Publisher created: ", servo_subscription)
 	
 	SignalBus.outgoing_data.connect(_publish_data)
+	SignalBus.publish_lights_data.connect(_publish_to_joy)
 
 
 
@@ -184,4 +197,21 @@ func _publish_data(pub_name: String, data: Dictionary[String, Variant]):
 		var msg = RosMsg.create("std_msgs/msg/String")
 		msg.data = ",".join(output)
 		servo_publisher.publish(msg)
+	pass
+
+
+func _publish_to_joy(button: String):
+	var msg = RosMsg.create("sensor_msgs/msg/Joy")
+	var buttons = []
+	buttons.resize(11)
+	buttons.fill(0)
+	if button == "e":
+		buttons.set(0, 1)
+	elif button == "d":
+		buttons.set(3, 1)
+	
+	msg.buttons = buttons
+	
+	#print(msg.button)
+	joy_servo_publisher.publish(msg)
 	pass
