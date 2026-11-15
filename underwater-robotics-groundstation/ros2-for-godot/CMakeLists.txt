@@ -9,8 +9,16 @@ if(APPLE)
     add_link_options(-undefined dynamic_lookup)
 endif()
 
-# Python for generators and symbols
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+# Normalize CMAKE_PREFIX_PATH (convert colons to semicolons on UNIX)
+if(CMAKE_PREFIX_PATH)
+    string(REPLACE ":" ";" CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}")
+endif()
+if(NOT CMAKE_PREFIX_PATH AND EXISTS "/opt/ros/humble")
+    set(CMAKE_PREFIX_PATH "/opt/ros/humble")
+endif()
+
+# Python interpreter for generators
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # godot-cpp
 add_subdirectory(godot-cpp)
@@ -30,14 +38,34 @@ set(GEN_PACKAGES "std_msgs;geometry_msgs;sensor_msgs;nav_msgs;tf2_msgs"
     CACHE STRING "ROS2 message packages to generate")
 set(ROS_DIR "$ENV{AMENT_PREFIX_PATH}" CACHE PATH "ROS2 install directory (auto-detected from env)")
 
-# Use first path from AMENT_PREFIX_PATH (colon-separated)
+# Find ROS directory containing base messages (search all paths in AMENT_PREFIX_PATH)
 string(REPLACE ":" ";" _ament_paths "${ROS_DIR}")
-list(GET _ament_paths 0 _ros_dir)
+set(_ros_dir "")
+foreach(_path ${_ament_paths})
+    if(EXISTS "${_path}/share/std_msgs/msg")
+        set(_ros_dir "${_path}")
+        break
+    endif()
+endforeach()
+if(NOT _ros_dir)
+    if(EXISTS "/opt/ros/humble/share/std_msgs/msg")
+        set(_ros_dir "/opt/ros/humble")
+    elseif(_ament_paths)
+        list(GET _ament_paths 0 _ros_dir)
+    else()
+        set(_ros_dir "/opt/ros/humble")
+    endif()
+endif()
+
+set(_ros_search_dirs "${ROS_DIR}")
+if(NOT _ros_search_dirs)
+    set(_ros_search_dirs "${_ros_dir}")
+endif()
 
 # Run generator at configure time
 execute_process(
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_msgs.py
-        --ros-dir "${_ros_dir}"
+        --ros-dir "${_ros_search_dirs}"
         --packages ${GEN_PACKAGES}
         --out-dir "${GEN_DIR}"
     RESULT_VARIABLE _gen_result
@@ -46,7 +74,7 @@ if(NOT _gen_result EQUAL 0)
     # Fallback: try system python3
     execute_process(
         COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_msgs.py
-            --ros-dir "${_ros_dir}"
+            --ros-dir "${_ros_search_dirs}"
             --packages ${GEN_PACKAGES}
             --out-dir "${GEN_DIR}"
         RESULT_VARIABLE _gen_result
@@ -71,7 +99,6 @@ target_include_directories(ros2_bridge PRIVATE
 )
 target_link_libraries(ros2_bridge PUBLIC
     rclcpp::rclcpp
-    Python3::Python
     ${std_msgs_TARGETS}
     ${builtin_interfaces_TARGETS}
     ${geometry_msgs_TARGETS}

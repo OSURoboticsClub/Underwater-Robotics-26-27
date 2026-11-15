@@ -6,7 +6,14 @@ channels:
 dependencies:
   - python=3.11
   - ros-humble-ros-base
+  - ros-humble-geometry-msgs
+  - ros-humble-sensor-msgs
+  - ros-humble-std-msgs
+  - ros-humble-nav-msgs
+  - ros-humble-tf2-msgs
   - ros-humble-joy
+  - ros-humble-cv-bridge
+  - ros-humble-image-transport
   - colcon-common-extensions
   - pygame
   - pyserial

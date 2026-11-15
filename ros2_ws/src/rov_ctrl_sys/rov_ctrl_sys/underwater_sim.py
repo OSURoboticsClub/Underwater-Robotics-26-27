@@ -706,7 +706,10 @@ class UnderwaterSim(Node):
         self._render(now)
 
         # 3. Publish sensor_msgs/Image
-        img_bytes = pygame.image.tobytes(self.surface, "RGB")
+        if hasattr(pygame.image, "tobytes"):
+            img_bytes = pygame.image.tobytes(self.surface, "RGB")
+        else:
+            img_bytes = pygame.image.tostring(self.surface, "RGB")
         msg = Image()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "camera_optical_frame"

@@ -36,20 +36,39 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-xterm -T "ROV Remote Launch" -e bash -lc "
+run_in_term() {
+    local title="$1"
+    local cmd="$2"
+
+    if command -v xterm &>/dev/null; then
+        xterm -T "$title" -e bash -lc "$cmd" &
+    elif command -v gnome-terminal &>/dev/null; then
+        gnome-terminal --title="$title" -- bash -lc "$cmd" &
+    elif command -v konsole &>/dev/null; then
+        konsole --title "$title" -e bash -lc "$cmd" &
+    else
+        bash -lc "$cmd" &
+    fi
+}
+
+run_in_term "ROV Remote Launch" "
 ssh -t ROV '
-source ~/Underwater-Robotics-Current/ros_setup.sh
+if [ -f ~/Underwater-Robotics-26-27/ros_setup.sh ]; then
+    source ~/Underwater-Robotics-26-27/ros_setup.sh
+elif [ -f ~/Underwater-Robotics-Current/ros_setup.sh ]; then
+    source ~/Underwater-Robotics-Current/ros_setup.sh
+fi
 ros2 launch rov_ctrl_sys launch_rov.launch.py
 '
-" &
+"
 REMOTE_PID=$!
 
 sleep 1
 
-xterm -T "ROV Local Launch" -e bash -lc "
+run_in_term "ROV Local Launch" "
 source \"$SCRIPT_DIR/ros_setup.sh\"
 ros2 launch rov_ctrl_sys launch_ground.launch.py
-" &
+"
 LOCAL_PID=$!
 
 wait -n "$REMOTE_PID" "$LOCAL_PID"

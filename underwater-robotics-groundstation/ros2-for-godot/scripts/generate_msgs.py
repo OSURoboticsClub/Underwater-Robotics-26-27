@@ -170,12 +170,26 @@ def parse_msg_file(filepath: str, package: str, msg_name: str) -> MsgDef:
 def discover_msgs(ros_dir: str, packages: List[str]) -> Dict[str, MsgDef]:
     """Discover and parse all .msg files for the given packages."""
     all_msgs: Dict[str, MsgDef] = {}
+    search_dirs = [p for p in ros_dir.split(os.pathsep) if p]
 
     for pkg in packages:
-        msg_dir = os.path.join(ros_dir, "share", pkg, "msg")
-        if not os.path.isdir(msg_dir):
-            print(f"Warning: {msg_dir} not found, skipping {pkg}", file=sys.stderr)
+        msg_dir = None
+        for sdir in search_dirs:
+            candidate = os.path.join(sdir, "share", pkg, "msg")
+            if os.path.isdir(candidate):
+                msg_dir = candidate
+                break
+
+        if not msg_dir:
+            # Also check if /opt/ros/humble has it as a fallback
+            fallback = os.path.join("/opt/ros/humble", "share", pkg, "msg")
+            if os.path.isdir(fallback):
+                msg_dir = fallback
+
+        if not msg_dir:
+            print(f"Warning: package '{pkg}' not found in {search_dirs}", file=sys.stderr)
             continue
+
         for fname in sorted(os.listdir(msg_dir)):
             if not fname.endswith(".msg"):
                 continue
@@ -186,8 +200,18 @@ def discover_msgs(ros_dir: str, packages: List[str]) -> Dict[str, MsgDef]:
 
     # Also parse builtin_interfaces for Time/Duration
     for pkg in ["builtin_interfaces"]:
-        msg_dir = os.path.join(ros_dir, "share", pkg, "msg")
-        if os.path.isdir(msg_dir):
+        msg_dir = None
+        for sdir in search_dirs:
+            candidate = os.path.join(sdir, "share", pkg, "msg")
+            if os.path.isdir(candidate):
+                msg_dir = candidate
+                break
+        if not msg_dir:
+            fallback = os.path.join("/opt/ros/humble", "share", pkg, "msg")
+            if os.path.isdir(fallback):
+                msg_dir = fallback
+
+        if msg_dir and os.path.isdir(msg_dir):
             for fname in sorted(os.listdir(msg_dir)):
                 if not fname.endswith(".msg"):
                     continue

@@ -29,17 +29,24 @@ if [ -z "$CONDA_DEFAULT_ENV" ] && [ -z "$ROS_DISTRO" ]; then
     fi
 fi
 
+# Source workspace if built
+if [ -f "$SCRIPT_DIR/ros2_ws/install/local_setup.bash" ]; then
+    source "$SCRIPT_DIR/ros2_ws/install/local_setup.bash"
+fi
+
 # Ensure dynamic linker finds ROS 2 libraries
 if [ -n "$CONDA_PREFIX" ]; then
     export DYLD_FALLBACK_LIBRARY_PATH="$CONDA_PREFIX/lib${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
     export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-elif [ -n "$AMENT_PREFIX_PATH" ]; then
-    export LD_LIBRARY_PATH="/opt/ros/humble/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+if [ -d "/opt/ros/humble/lib" ]; then
+    export LD_LIBRARY_PATH="/opt/ros/humble/lib:/opt/ros/humble/lib/$(uname -m)-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
 
 # 2. Check and auto-compile GDExtension library if missing for current architecture
 OS_NAME="$(uname -s)"
 ARCH_NAME="$(uname -m)"
+[ "$ARCH_NAME" = "aarch64" ] && ARCH_NAME="arm64"
 
 NEEDED_LIB=""
 if [ "$OS_NAME" = "Linux" ]; then
@@ -67,11 +74,26 @@ if [ -n "$NEEDED_LIB" ] && [ ! -f "$NEEDED_LIB" ]; then
         if [ "$OS_NAME" = "Linux" ]; then
             mkdir -p "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/linux.${ARCH_NAME}"
             cp build/bin/libros2_for_godot.so "$NEEDED_LIB"
+            if [ "$ARCH_NAME" = "arm64" ]; then
+                mkdir -p "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/linux.aarch64"
+                cp build/bin/libros2_for_godot.so "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/linux.aarch64/libros2_for_godot.so"
+            fi
         elif [ "$OS_NAME" = "Darwin" ]; then
             mkdir -p "$SCRIPT_DIR/underwater-robotics-groundstation/addons/ros2_for_godot/bin/macos"
             cp build/bin/libros2_for_godot.dylib "$NEEDED_LIB"
         fi
     )
+
+    if [ ! -f "$NEEDED_LIB" ]; then
+        echo "================================================================="
+        echo "Error: Failed to compile ros2_for_godot GDExtension library!"
+        echo "Expected: $NEEDED_LIB"
+        echo ""
+        echo "If you are on Ubuntu, run the 1-click setup script first:"
+        echo "  ./setup_ubuntu.sh"
+        echo "================================================================="
+        exit 1
+    fi
     echo "ros2_for_godot built successfully!"
 fi
 
