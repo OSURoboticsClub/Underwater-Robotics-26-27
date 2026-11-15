@@ -162,9 +162,11 @@ Outputs are clamped to standard ESC PWM ranges (1100 µs full reverse, 1500 µs 
 
 #### 1-Click Automated Setup
 ```bash
-git clone https://github.com/OSURoboticsClub/Underwater-Robotics-26-27.git
 cd Underwater-Robotics-26-27
+git fetch origin
+git checkout -b vector-based origin/vector-based
 ./setup_ubuntu.sh
+
 ```
 
 #### Launching
