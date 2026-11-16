@@ -18,44 +18,44 @@ func _ready():
 	# Create Subscriptions
 	servo_subscription = create_subscription(
 		"std_msgs/msg/String",
-		"/servo_command",
+		Global.topic_mappings["/servo_command"],
 		_on_message_received,
 		10
 	)
 	if servo_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/servo_command'")
+		SignalBus.error.emit("Failed to create subscription to '" +Global.topic_mappings["/servo_command"]+"'")
 	else:
 		print("Subscription created: ", servo_subscription)
 	
 	joy_servo_publisher = create_publisher(
 		"sensor_msgs/msg/Joy",
-		"/joy",
+		Global.topic_mappings["/joy"],
 		10
 	)
 	if joy_servo_publisher == null:
-		SignalBus.error.emit("Failed to create subscription to '/joy_to_servo'")
+		SignalBus.error.emit("Failed to create subscription to '"+Global.topic_mappings["/joy"]+"'")
 	else:
 		print("Subscription created: ", joy_servo_publisher)
 	
 	video_subscription = create_subscription(
 		"sensor_msgs/msg/Image",
-		"/image_raw",
+		Global.topic_mappings["/image_raw"],
 		_handle_image,
 		RosQoSProfile.sensor_data()
 	)
 	if video_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/image_raw'")
+		SignalBus.error.emit("Failed to create subscription to '" + Global.topic_remappings["image_raw"]+"'")
 	else:
 		print("Subscription created: ", video_subscription)
 	
 	motor_subscription = create_subscription(
 		"std_msgs/msg/String",
-		"/motor_command",
+		Global.topic_mappings["/motor_command"],
 		_on_message_received,
 		10
 	)
 	if motor_subscription == null:
-		SignalBus.error.emit("Failed to create subscription to '/motor_command'")
+		SignalBus.error.emit("Failed to create subscription to '"+Global.topic_mappings["/motor_command"]+"'")
 	else:
 		print("Subscription created: ", motor_subscription)
 	
@@ -63,21 +63,21 @@ func _ready():
 	# Create Publishers
 	key_states_publisher = create_publisher(
 		"std_msgs/msg/String",
-		"/key_states",
+		Global.topic_mappings["/key_states"],
 		10
 	)
 	if key_states_publisher == null:
-		SignalBus.error.emit("Failed to create publisher to '/key_states'")
+		SignalBus.error.emit("Failed to create publisher to '"+Global.topic_mappings["/key_states"]+"'")
 	else:
 		print("Publisher created: ", key_states_publisher)
 	
 	servo_publisher = create_publisher( #TODO: This needs to actually go to /gound/joy - joy_to_servo
 		"std_msgs/msg/String",
-		"/servo_command",
+		Global.topic_mappings["/servo_command"],
 		10
 	)
 	if servo_subscription == null:
-		SignalBus.error.emit("Failed to create publisher to '/servo_command'")
+		SignalBus.error.emit("Failed to create publisher to '"+Global.topic_mappings["/servo_command"]+"'")
 	else:
 		print("Publisher created: ", servo_subscription)
 	

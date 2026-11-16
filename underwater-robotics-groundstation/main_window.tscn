@@ -316,7 +316,6 @@ theme_override_constants/separation = 20
 theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")
 
 [node name="DataLabel9" type="Label" parent="HSplitContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/DataVBox/DataOutput" unique_id=464201702]
-visible = false
 layout_mode = 2
 text = "Front Left Vertical: 1500"
 script = ExtResource("2_iwhwg")
@@ -325,7 +324,6 @@ data_name = "vfl"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel10" type="Label" parent="HSplitContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/DataVBox/DataOutput" unique_id=1165701359]
-visible = false
 layout_mode = 2
 text = "Front Right Vertical: 1500"
 script = ExtResource("2_iwhwg")
@@ -334,7 +332,6 @@ data_name = "vfr"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel11" type="Label" parent="HSplitContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/DataVBox/DataOutput" unique_id=1025666816]
-visible = false
 layout_mode = 2
 text = "Back Left Vertical: 1500"
 script = ExtResource("2_iwhwg")
@@ -343,7 +340,6 @@ data_name = "vbl"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="DataLabel12" type="Label" parent="HSplitContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/DataVBox/DataOutput" unique_id=197201087]
-visible = false
 layout_mode = 2
 text = "Back Right Vertical: 1500"
 script = ExtResource("2_iwhwg")
@@ -352,7 +348,6 @@ data_name = "vbr"
 metadata/_custom_type_script = "uid://cjwllhvtvf7fv"
 
 [node name="HSeparator5" type="HSeparator" parent="HSplitContainer/MarginContainer/TabContainer/Data/VBoxContainer/DataScrollContainer/DataVBox/DataOutput" unique_id=1762550511]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 20
 theme_override_styles/separator = SubResource("StyleBoxLine_1rr46")

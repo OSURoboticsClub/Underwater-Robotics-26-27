@@ -4,3 +4,9 @@ documentation
 in ROS nodes change from keys to an action name
 
 Improve the status label for input remaping
+
+improve the motor visual diagram
+
+and change to some data display to be a different data type (bool)
+
+Change location of topic remapping file
