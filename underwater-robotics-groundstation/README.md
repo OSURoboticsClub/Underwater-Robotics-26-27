@@ -2,6 +2,10 @@ This project requires Godot 4.7.1 - stable. And not the Mono release.
 
 
 # Installing Godot
+To install Godot and open the project you can run the ./open_godot_project.sh file int the Underwater folder.
+
+Or follow the instructions below.
+
 You need to download the Godot 4.7.1 standard version. which can be found here: https://godotengine.org/download/archive/4.7.1-stable/
 
 To get the project to properly connect to Ros2, you must source Ros2 at the same time that you run godot.
@@ -16,8 +20,6 @@ You must do this everytime you want to open Godot.
 You then import the the project into Godot by selecting the folder.
 Once its open you can run it and it will connect to Ros.
 
-Hopefully this worked and I didn't forget a step.
-Scripts will be coming soon to help automate this process.
 
 
 # Building the GDExtension
