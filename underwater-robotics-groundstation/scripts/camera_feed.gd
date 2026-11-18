@@ -33,6 +33,13 @@ func _ready() -> void:
 	thread.start(_thread_loop)
 
 
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		var focused = get_viewport().gui_get_focus_owner()
+		if focused:
+			focused.release_focus()
+
+
 func set_sim_mode(enabled: bool) -> void:
 	use_sim_mode = enabled
 	if use_sim_mode:

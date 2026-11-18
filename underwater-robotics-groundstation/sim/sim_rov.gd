@@ -199,22 +199,22 @@ func _process_inputs(delta: float) -> void:
 	var heave := 0.0
 	var yaw := 0.0
 
-	# Keyboard Movement (WASD + Q/E + Space/Shift)
-	if Input.is_key_pressed(KEY_W):
+	# Keyboard Movement (WASD / Arrows + Q/E + Space/Shift/C)
+	if Input.is_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
 		surge -= 1.0  # -Z is forward in Godot
-	if Input.is_key_pressed(KEY_S):
+	if Input.is_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
 		surge += 1.0
-	if Input.is_key_pressed(KEY_D):
+	if Input.is_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
 		sway += 1.0   # +X is right
-	if Input.is_key_pressed(KEY_A):
+	if Input.is_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
 		sway -= 1.0
-	if Input.is_key_pressed(KEY_E):
+	if Input.is_key_pressed(KEY_E) or Input.is_physical_key_pressed(KEY_E):
 		yaw -= 1.0   # Turn right
-	if Input.is_key_pressed(KEY_Q):
+	if Input.is_key_pressed(KEY_Q) or Input.is_physical_key_pressed(KEY_Q):
 		yaw += 1.0   # Turn left
-	if Input.is_key_pressed(KEY_SPACE):
+	if Input.is_key_pressed(KEY_SPACE) or Input.is_physical_key_pressed(KEY_SPACE):
 		heave += 1.0 # Surface (+Y)
-	if Input.is_key_pressed(KEY_SHIFT):
+	if Input.is_key_pressed(KEY_SHIFT) or Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_C):
 		heave -= 1.0 # Dive (-Y)
 
 	# Camera Gimbal Keyboard controls (I/K for tilt, J/L for pan)
