@@ -277,14 +277,14 @@ func _clamp_pwm(val: float) -> int:
 	return int(clampf(val, 1100.0, 1900.0))
 
 
-func _on_outgoing_data(_pub_name: String, data: Dictionary[String, Variant]) -> void:
+func _on_outgoing_data(_pub_name: String, data: Dictionary) -> void:
 	if data.has("ext_lights"):
 		spotlight_energy = float(data["ext_lights"])
 	if data.has("ext_lights_max"):
 		spotlight_energy = float(data["ext_lights_max"])
 
 
-func _on_incoming_telemetry(data: Dictionary[String, Variant]) -> void:
+func _on_incoming_telemetry(data: Dictionary) -> void:
 	if _internal_update:
 		return
 	if data.has("camera_x"):
@@ -299,7 +299,7 @@ func _on_incoming_telemetry(data: Dictionary[String, Variant]) -> void:
 
 func _publish_telemetry() -> void:
 	_internal_update = true
-	var telem: Dictionary[String, Variant] = {}
+	var telem: Dictionary = {}
 	for k in thrusters:
 		telem[k] = str(thrusters[k])
 	telem["camera_x"] = str(snappedf(-rad_to_deg(camera_pan_angle) / 45.0, 0.01))

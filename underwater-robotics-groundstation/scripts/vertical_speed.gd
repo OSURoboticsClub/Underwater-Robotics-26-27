@@ -5,7 +5,7 @@ func _ready() -> void:
 	SignalBus.incoming_data.connect(display_data)
 
 
-func display_data(data: Dictionary[String, Variant]) -> void:
+func display_data(data: Dictionary) -> void:
 	var keys = ["vfr", "vfl", "vbr", "vbl"]
 	var total = 0.0
 	var count = 0

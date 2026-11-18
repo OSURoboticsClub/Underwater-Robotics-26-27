@@ -2,7 +2,7 @@ extends Node
 
 ## Send out parsed ROS2 data to be displayed.
 @warning_ignore("unused_signal")
-signal incoming_data(data: Dictionary[String, Variant])
+signal incoming_data(data: Dictionary)
 
 ## Send out the incoming data for a video feed.
 @warning_ignore("unused_signal")
@@ -16,4 +16,4 @@ signal error(error_text: String)
 
 
 @warning_ignore("unused_signal")
-signal outgoing_data(pub_name: String, data: Dictionary[String, Variant])
+signal outgoing_data(pub_name: String, data: Dictionary)

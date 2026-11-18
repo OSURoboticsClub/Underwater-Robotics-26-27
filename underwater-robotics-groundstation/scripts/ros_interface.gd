@@ -141,7 +141,7 @@ func _on_message_received(msg) -> void:
 	if msg == null or msg.data.is_empty():
 		return
 
-	var data: Dictionary[String, Variant] = {}
+	var data: Dictionary = {}
 	var pieces = msg.data.split(",")
 	for p in pieces:
 		var parts = p.split("=")
@@ -157,7 +157,7 @@ func _handle_image(msg) -> void:
 		SignalBus.incoming_video.emit(msg)
 
 
-func _publish_data(pub_name: String, data: Dictionary[String, Variant]) -> void:
+func _publish_data(pub_name: String, data: Dictionary) -> void:
 	if pub_name == "servo" and servo_publisher != null:
 		var output: Array[String] = []
 		for key in data:

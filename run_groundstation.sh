@@ -176,4 +176,10 @@ if [ -z "$GODOT_EXEC" ] || [ ! -x "$GODOT_EXEC" ]; then
     exit 1
 fi
 
+# 4. Ensure resources are imported on fresh checkouts
+if [ ! -d "$SCRIPT_DIR/underwater-robotics-groundstation/.godot/imported" ]; then
+    echo "First run: importing project assets (textures/fonts)..."
+    "$GODOT_EXEC" --headless --editor --quit --path "$SCRIPT_DIR/underwater-robotics-groundstation" 2>/dev/null || true
+fi
+
 exec "$GODOT_EXEC" --path "$SCRIPT_DIR/underwater-robotics-groundstation" "$@"

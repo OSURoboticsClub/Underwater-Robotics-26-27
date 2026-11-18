@@ -16,14 +16,14 @@ func _ready() -> void:
 
 
 func toggle_exterior() -> void:
-	var output: Dictionary[String, Variant] = {
+	var output: Dictionary = {
 		"ext_lights": int(exterior_button.button_pressed)
 	}
 	SignalBus.outgoing_data.emit("servo", output)
 
 
 func toggle_dome() -> void:
-	var output: Dictionary[String, Variant] = {
+	var output: Dictionary = {
 		"dome_lights": int(dome_button.button_pressed)
 	}
 	SignalBus.outgoing_data.emit("servo", output)
@@ -32,14 +32,14 @@ func toggle_dome() -> void:
 func update_brightness(changed: bool) -> void:
 	if not changed:
 		return
-	var output: Dictionary[String, Variant] = {
+	var output: Dictionary = {
 		"ext_lights_max": float(exterior_slider.value),
 		"dome_lights_max": float(dome_slider.value)
 	}
 	SignalBus.outgoing_data.emit("servo", output)
 
 
-func process_data(data: Dictionary[String, Variant]) -> void:
+func process_data(data: Dictionary) -> void:
 	if data.has("ext_lights"):
 		exterior_button.button_pressed = bool(int(data["ext_lights"]))
 	if data.has("ext_lights_max"):

@@ -180,9 +180,9 @@ echo "Successfully compiled: $TARGET_LIB"
 
 # 8. Verification test with Godot
 echo ""
-echo ">>> Verifying Godot scene loading..."
+echo ">>> Importing Godot assets and verifying scene loading..."
 GODOT_CMD="$(command -v godot || command -v godot4 || echo '/usr/local/bin/godot')"
-"$GODOT_CMD" --headless --quit --path "$SCRIPT_DIR/underwater-robotics-groundstation" || {
+"$GODOT_CMD" --headless --editor --quit --path "$SCRIPT_DIR/underwater-robotics-groundstation" || {
     echo "Warning: Godot headless verification exited with code $?."
 }
 
