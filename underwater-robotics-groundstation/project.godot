@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="Underwater Robotics Groundstation"
-run/main_scene="uid://8damggiflm3d"
-config/features=PackedStringArray("4.7")
+run/main_scene="res://main_window.tscn"
+config/features=PackedStringArray("4.3")
 run/max_fps=60
-boot_splash/image="uid://did0w6hch0fyh"
-config/icon="uid://did0w6hch0fyh"
+boot_splash/image="res://logo.png"
+config/icon="res://icon.svg"
 
 [autoload]
 
-SignalBus="*uid://0gwdmrrs4320"
+SignalBus="*res://scripts/signal_bus.gd"
 
 [display]
 
@@ -32,7 +32,7 @@ window/stretch/aspect="expand"
 
 [gui]
 
-theme/custom="uid://w8gxfnwaa2sp"
+theme/custom="res://main_theme.tres"
 
 [input]
 
