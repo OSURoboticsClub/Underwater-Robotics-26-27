@@ -1,12 +1,23 @@
 extends Node
 
 @onready var cameras_window: Window = $'Window'
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready() -> void:
-	cameras_window.close_requested.connect(func(): cameras_window.queue_free())
+	if is_instance_valid(cameras_window):
+		cameras_window.close_requested.connect(func(): cameras_window.queue_free())
+	get_tree().root.close_requested.connect(shut_down)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		shut_down()
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("fullscreen"):
+	if event.is_action_pressed("close"):
+		shut_down()
+	elif event.is_action_pressed("fullscreen"):
 		if get_window().mode == Window.MODE_FULLSCREEN:
 			get_window().mode = Window.MODE_MAXIMIZED
 		else:
@@ -14,5 +25,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func shut_down() -> void:
-	#TODO: send ros info to shutdown
+	if is_instance_valid(cameras_window):
+		cameras_window.queue_free()
 	get_tree().quit()

@@ -29,9 +29,15 @@ graceful_stop() {
 
 cleanup() {
     echo "Cleaning up..."
+    trap '' EXIT INT TERM
 
     graceful_stop "$REMOTE_PID" "remote launch"
     graceful_stop "$LOCAL_PID" "local launch"
+
+    # Ensure all local and remote ROS 2 nodes are terminated
+    pkill -INT -f "rov_ctrl_sys" 2>/dev/null || true
+    pkill -INT -f "joy_node" 2>/dev/null || true
+    ssh -o ConnectTimeout=2 ROV 'pkill -f rov_ctrl_sys' 2>/dev/null || true
 }
 
 trap cleanup EXIT INT TERM

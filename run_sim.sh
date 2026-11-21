@@ -56,12 +56,27 @@ SIM_PID=""
 
 cleanup() {
     echo ""
-    echo "Shutting down underwater simulator..."
+    echo "Shutting down underwater simulator and all ROS nodes..."
+    trap '' EXIT INT TERM
+
     if [ -n "$SIM_PID" ]; then
-        kill -INT "$SIM_PID" 2>/dev/null
-        wait "$SIM_PID" 2>/dev/null
+        kill -INT -- -"$SIM_PID" 2>/dev/null || kill -INT "$SIM_PID" 2>/dev/null
     fi
-    echo "Done."
+
+    pkill -INT -f "rov_ctrl_sys" 2>/dev/null || true
+    pkill -INT -f "underwater_sim" 2>/dev/null || true
+    pkill -INT -f "joy_node" 2>/dev/null || true
+
+    sleep 1
+
+    pkill -KILL -f "rov_ctrl_sys" 2>/dev/null || true
+    pkill -KILL -f "underwater_sim" 2>/dev/null || true
+    pkill -KILL -f "joy_node" 2>/dev/null || true
+
+    if [ -n "$SIM_PID" ]; then
+        wait "$SIM_PID" 2>/dev/null || true
+    fi
+    echo "All simulator processes and ROS nodes cleanly terminated."
 }
 
 trap cleanup EXIT INT TERM

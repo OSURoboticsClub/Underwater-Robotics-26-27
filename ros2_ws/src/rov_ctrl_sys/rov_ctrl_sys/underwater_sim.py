@@ -745,6 +745,10 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        try:
+            pygame.quit()
+        except Exception:
+            pass
         sim.destroy_node()
         rclpy.shutdown()
 
