@@ -14,10 +14,10 @@ signal incoming_video(image_data)
 @warning_ignore("unused_signal")
 signal error(error_text: String)
 
-
+## Send data back to ROS.
 @warning_ignore("unused_signal")
 signal outgoing_data(pub_name: String, data: Dictionary[String, Variant])
 
-
+## Send data back to ROS about the lights.
 @warning_ignore("unused_signal")
 signal publish_lights_data(light: String)

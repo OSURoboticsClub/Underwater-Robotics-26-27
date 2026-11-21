@@ -1,15 +1,15 @@
 extends RosNode
 
+# Publisher nodes
 var key_states_publisher: RosPublisher
 var servo_publisher: RosPublisher
 var joy_servo_publisher: RosPublisher
 
+# Subscriber nodes
 var motor_subscription: RosSubscription
 var servo_subscription: RosSubscription
 var joy_servo_subscription: RosSubscription
 var video_subscription: RosSubscription
-
-var last_physics_time_usec: int = 0
 
 
 func _ready():
@@ -87,31 +87,7 @@ func _ready():
 
 
 func _process(_delta: float) -> void:
-	#var now := Time.get_ticks_usec()
-
-	"""if last_physics_time_usec != 0:
-		var interval_ms := (
-			now - last_physics_time_usec
-		) / 1000.0
-
-		if interval_ms > 30.0:
-			print("Physics interval: ", interval_ms, " ms")
-
-	last_physics_time_usec = now
-
-	var spin_start_usec := Time.get_ticks_usec()"""
 	spin_some()
-	"""var spin_duration_ms := (
-		Time.get_ticks_usec() - spin_start_usec
-	) / 1000.0"""
-
-	#if spin_duration_ms > 5.0:
-	#	print("spin_some duration: ", spin_duration_ms, " ms")
-
-	#if Input.is_key_pressed(KEY_P):
-	#	SignalBus.error.emit("New Test Error")
-	
-	# Get inputs and publish them to appropriate topics
 	_handle_keyboard_inputs()
 
 func _handle_keyboard_inputs() -> void:
@@ -158,23 +134,21 @@ func _handle_keyboard_inputs() -> void:
 	# X - reset camera x (used with BACKSPACE)
 	# Y - reset camera y (used with BACKSPACE)
 
-
+## Process data from ROS before sending to UI components
 func _on_message_received(msg):
-	#print("RECEIVED MESSAGE: ", msg.data)
 	var data: Dictionary[String,Variant] = {}
 	var pieces_of_data = msg.data.split(",")
 	for d in pieces_of_data:
 		var data_parts = d.split("=")
-		#print("data_parts: " + str(data_parts))
 		data[data_parts.get(0)] = data_parts.get(1)
 	if data != {}:
 		SignalBus.incoming_data.emit(data)
 
-
+## Send camera image to display
 func _handle_image(msg) -> void:
 	SignalBus.incoming_video.emit(msg)
 
-
+## Send datato ROS topics
 func _publish_data(pub_name: String, data: Dictionary[String, Variant]):
 	if pub_name == "servo":
 		var output = []
@@ -183,9 +157,9 @@ func _publish_data(pub_name: String, data: Dictionary[String, Variant]):
 		var msg = RosMsg.create("std_msgs/msg/String")
 		msg.data = ",".join(output)
 		servo_publisher.publish(msg)
-	pass
 
 
+## Publish data to ROS topic for turning lights on and off
 func _publish_to_joy(button: String):
 	var msg = RosMsg.create("sensor_msgs/msg/Joy")
 	var buttons = []
@@ -198,6 +172,4 @@ func _publish_to_joy(button: String):
 	
 	msg.buttons = buttons
 	
-	#print(msg.button)
 	joy_servo_publisher.publish(msg)
-	pass

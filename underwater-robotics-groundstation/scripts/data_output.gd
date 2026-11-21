@@ -1,9 +1,9 @@
 extends VBoxContainer
 
-
 func _ready() -> void:
 	SignalBus.incoming_data.connect(process_data)
 
+## Update data display
 func process_data(data: Dictionary[String, Variant]) -> void:
 	for key in data:
 		var label: DataLabel = get_node_or_null(key)
@@ -21,6 +21,3 @@ func process_data(data: Dictionary[String, Variant]) -> void:
 						motor_display.label_settings.font_color = Color.GREEN
 					else:
 						motor_display.label_settings.font_color = Color.WHITE
-					
-			
-		

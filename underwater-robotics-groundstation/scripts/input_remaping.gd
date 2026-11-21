@@ -1,7 +1,10 @@
 extends VBoxContainer
 
-const INPUT_BINDINGS_PATH := "user://input_bindings.cfg"
+## File path to saved bindings profiles.
+const INPUT_BINDINGS_PATH := "user://input_bindings.cfg"# TODO: move this in to project folder to be part of repo
+## Name of the default profile
 const DEFAULT_PROFILE_NAME := "Default"
+## Actions that are available to be remapped.
 const REMAPPABLE_ACTIONS: Array[StringName] = [
 	&"up",
 	&"down",
@@ -32,7 +35,6 @@ func _ready() -> void:
 	_save_default_profile()
 	_build_controls()
 	$ProfileControls/SaveRow/SaveButton.pressed.connect(_on_save_profile_pressed)
-	#$ProfileControls/LoadRow/LoadButton.pressed.connect(_on_load_profile_pressed)
 	$ProfileControls/LoadRow/DeleteButton.pressed.connect(_on_delete_profile_pressed)
 	$ProfileControls/LoadRow/SavedProfiles.item_selected.connect(_on_load_profile_pressed) #TODO: this should work, i think, but its not
 	$ResetButton.pressed.connect(_on_reset_button_pressed)
@@ -42,6 +44,7 @@ func _ready() -> void:
 	_refresh_saved_profiles(DEFAULT_PROFILE_NAME)
 
 
+## Setup buttons for remapping controls
 func _build_controls() -> void:
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
@@ -65,12 +68,7 @@ func _build_controls() -> void:
 		vbox.add_child(hbox)
 		remap_buttons[action] = button
 
-
-func _on_close_button_pressed() -> void:
-	_cancel_remap()
-	visible = false
-
-
+## Convert snake case text to normal text.
 func snake_case_to_normal(text: String, capitalize_words: bool = true) -> String:
 	var words := text.split("_")
 	if capitalize_words:
@@ -78,7 +76,7 @@ func snake_case_to_normal(text: String, capitalize_words: bool = true) -> String
 			words[i] = words[i].capitalize()
 	return " ".join(words)
 
-
+## Get name of key assigned to action.
 func get_action_key_name(action_name: StringName) -> String:
 	if not InputMap.has_action(action_name):
 		return "No Key Assigned"
@@ -88,7 +86,7 @@ func get_action_key_name(action_name: StringName) -> String:
 			return event.as_text()
 	return "No Key Assigned"
 
-
+## Start remapping an action.
 func _begin_remap(action: StringName, button: Button) -> void:
 	if active_profile_name == DEFAULT_PROFILE_NAME:
 		_show_status("The Default mapping cannot be edited. Save it under a new name first.")
@@ -99,7 +97,7 @@ func _begin_remap(action: StringName, button: Button) -> void:
 	button.grab_focus()
 	_show_status("Press a key for %s. Escape cancels." % snake_case_to_normal(String(action)))
 
-
+## Accept action to remap action to that key.
 func _input(event: InputEvent) -> void:
 	if current_remap == &"" or not event is InputEventKey:
 		return
@@ -118,18 +116,18 @@ func _input(event: InputEvent) -> void:
 	current_remap = &""
 	remap_action_to_key(action_to_remap, key_event)
 
-
+## Abort the active remapping of an action.
 func _cancel_remap() -> void:
 	if remap_buttons.has(current_remap):
 		remap_buttons[current_remap].text = get_action_key_name(current_remap)
 	current_remap = &""
 
-
+## Cancel remapping if switching to different tab.
 func _on_visibility_changed() -> void:
 	if not is_visible_in_tree():
 		_cancel_remap()
 
-
+## Remap the provided action to the pressed key.
 func remap_action_to_key(action_name: StringName, key_event: InputEventKey) -> void:
 	if active_profile_name == DEFAULT_PROFILE_NAME:
 		push_warning("Cannot edit the protected Default input mapping.")
@@ -163,6 +161,7 @@ func remap_action_to_key(action_name: StringName, key_event: InputEventKey) -> v
 		% [snake_case_to_normal(String(action_name)), new_event.as_text()]
 	)
 
+## Check if you can delete the current remap profile
 func _on_delete_profile_pressed() -> void:
 	var profile_name := String(saved_profiles.get_item_metadata(saved_profiles.selected))
 	if profile_name != DEFAULT_PROFILE_NAME:
@@ -170,7 +169,7 @@ func _on_delete_profile_pressed() -> void:
 	else:
 		_show_status("You can't delete the default binding")
 
-
+## Delete a saved remap profile
 func _delete_profile() -> void:
 	_cancel_remap()
 	pass
@@ -178,7 +177,7 @@ func _delete_profile() -> void:
 	# if ok then remove current profile
 	# save to file
 
-
+## Save the current remap profile
 func _on_save_profile_pressed() -> void:
 	_cancel_remap()
 	var profile_name := profile_name_input.text.strip_edges()
