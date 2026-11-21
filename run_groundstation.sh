@@ -29,6 +29,9 @@ if [ -z "$CONDA_DEFAULT_ENV" ] && [ -z "$ROS_DISTRO" ]; then
     fi
 fi
 
+# Match ROS 2 Domain ID with robot control system
+export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-42}"
+
 # Source workspace if built
 if [ -f "$SCRIPT_DIR/ros2_ws/install/local_setup.bash" ]; then
     source "$SCRIPT_DIR/ros2_ws/install/local_setup.bash"

@@ -109,30 +109,42 @@ else
     conda activate rov-humble
 fi
 
-# 4. Godot 4 Installation
+# 4. Godot 4.7 Installation
 echo ""
-echo ">>> Step 3/6: Checking Godot 4 executable..."
+echo ">>> Step 3/6: Checking Godot 4.7 executable..."
+NEED_GODOT_INSTALL=false
 if ! command -v godot &>/dev/null && ! command -v godot4 &>/dev/null; then
-    echo "Godot 4 not found in PATH. Downloading official Godot 4.3 executable..."
+    NEED_GODOT_INSTALL=true
+else
+    CURRENT_GODOT="$(command -v godot || command -v godot4)"
+    INSTALLED_VER="$("$CURRENT_GODOT" --version 2>/dev/null || echo '')"
+    if [[ "$INSTALLED_VER" != *"4.7"* ]]; then
+        echo "Found existing Godot version ($INSTALLED_VER). Upgrading to Godot 4.7..."
+        NEED_GODOT_INSTALL=true
+    else
+        echo "Found Godot 4.7 in PATH: $INSTALLED_VER"
+    fi
+fi
+
+if [ "$NEED_GODOT_INSTALL" = true ]; then
+    echo "Downloading official Godot 4.7 stable executable..."
     ARCH="$(uname -m)"
     if [ "$ARCH" = "x86_64" ]; then
-        GODOT_ZIP="Godot_v4.3-stable_linux.x86_64.zip"
-        GODOT_BIN_NAME="Godot_v4.3-stable_linux.x86_64"
+        GODOT_ZIP="Godot_v4.7-stable_linux.x86_64.zip"
+        GODOT_BIN_NAME="Godot_v4.7-stable_linux.x86_64"
     elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        GODOT_ZIP="Godot_v4.3-stable_linux.arm64.zip"
-        GODOT_BIN_NAME="Godot_v4.3-stable_linux.arm64"
+        GODOT_ZIP="Godot_v4.7-stable_linux.arm64.zip"
+        GODOT_BIN_NAME="Godot_v4.7-stable_linux.arm64"
     fi
 
-    DOWNLOAD_URL="https://github.com/godotengine/godot/releases/download/4.3-stable/${GODOT_ZIP}"
+    DOWNLOAD_URL="https://github.com/godotengine/godot/releases/download/4.7-stable/${GODOT_ZIP}"
     echo "Downloading from: $DOWNLOAD_URL ..."
     curl -L "$DOWNLOAD_URL" -o "/tmp/${GODOT_ZIP}"
     unzip -q -o "/tmp/${GODOT_ZIP}" -d /tmp/
     sudo mv "/tmp/${GODOT_BIN_NAME}" /usr/local/bin/godot
     sudo chmod +x /usr/local/bin/godot
     rm -f "/tmp/${GODOT_ZIP}"
-    echo "Installed Godot 4 to /usr/local/bin/godot"
-else
-    echo "Found Godot in PATH: $(command -v godot || command -v godot4)"
+    echo "Installed Godot 4.7 to /usr/local/bin/godot"
 fi
 
 # 5. Git Submodules (godot-cpp)

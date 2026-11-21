@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="Underwater Robotics Groundstation"
-run/main_scene="res://main_window.tscn"
-config/features=PackedStringArray("4.3")
+run/main_scene="res://window_manager.tscn"
+config/features=PackedStringArray("4.7")
 run/max_fps=60
 boot_splash/image="res://logo.png"
 config/icon="res://icon.svg"
