@@ -10,4 +10,6 @@ script = ExtResource("1_rcf65")
 [node name="MainWindow" parent="." unique_id=1708160728 instance=ExtResource("2_rcf65")]
 
 [node name="RosInterface" type="RosNode" parent="." unique_id=659947262]
+ros_node_name = "UI"
+ros_namespace = "ground"
 script = ExtResource("4_t1ppw")
