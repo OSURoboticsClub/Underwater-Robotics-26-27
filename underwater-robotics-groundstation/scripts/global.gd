@@ -17,10 +17,9 @@ func _ready() -> void:
 	# Override with cmdline args
 	var args = OS.get_cmdline_user_args()
 	for a in args:
-		a = a.trim_prefix("--")
-	remappings = remappings + args
-	print(typeof(remappings))
+		remappings.append(a.trim_prefix("--"))
 	for remapping in remappings:
+		print(remapping)
 		var parts = remapping.split(":")
 		topic_mappings[parts[0].strip_edges()] = parts[1].strip_edges()
 

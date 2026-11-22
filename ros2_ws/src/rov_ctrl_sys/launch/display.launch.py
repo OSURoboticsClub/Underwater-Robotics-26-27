@@ -31,44 +31,21 @@ from launch_ros.actions import Node
 import platform
 
 def generate_launch_description():
-    params_dir = PathJoinSubstitution([FindPackageShare('rov_ctrl_sys'), 'config'])
-    fullscreen = LaunchConfiguration('fullscreen')
-
-    """display_node = Node(
-        package='rov_ctrl_sys',
-        executable='window',
-        name='display',
-        output='log',
-        parameters=[
-            {'fullscreen': LaunchConfiguration('fullscreen')},
-            PathJoinSubstitution([params_dir, 'camera_shared.yaml']),
-        ],
-        remappings=[
-            ('image_raw','image_uncompressed'),
-        ],
-#         ros_arguments=['--log-level', 'debug'],
-    )"""
-    print(platform.machine())
+    # Get Users architecture and run appropariate ui
     extension = "x86_64"
     architecture = platform.machine()
     if architecture == 'aarch64' or architecture == 'arm64':
         extension = "arm64"
 
     return LaunchDescription([
-        DeclareLaunchArgument('fullscreen', default_value=fullscreen),
-        #display_node,
         ExecuteProcess(
-            # condition=IfCondition(
-            #     PythonExpression([
-            #         architecture,
-            #         ' == aarch64',
-            #         ' or ',
-            #         architecture,
-            #         ' == arm64'
-            #     ])
-            # ),
             cmd=[[
-                '~/Underwater-Robotics-Current/underwater-robotics-groundstation/exports/GroundstationUI.' + extension + ' -- ',
+                '~/Underwater-Robotics-Current/underwater-robotics-groundstation/exports/'+ extension +'/GroundstationUI.' + extension + ' -- ' + 
+                '--/image_raw:/ground/image_uncompressed '+
+                '--/motor_command:/ground/motor_command '+
+                '--/servo_command:/ground/servo_command '+
+                '--/joy:/ground/joy '+
+                '--/key_states:/ground/key_states '
                 # Add remap arguments here with "--remap_from:remap_to"
                 #example: '--/keyboard_to_servo:/ground/keyboard_to_servo ',
             ]],

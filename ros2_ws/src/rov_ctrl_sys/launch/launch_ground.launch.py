@@ -13,7 +13,6 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PathJoinSubstitution([launch_dir, 'gamepad.launch.py']),
             ),
-            DeclareLaunchArgument('fullscreen', default_value='True'),
             IncludeLaunchDescription(
                 PathJoinSubstitution([launch_dir, 'display.launch.py']),
             ),
