@@ -28,11 +28,13 @@ from launch.substitutions import (
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
+import platform
+
 def generate_launch_description():
     params_dir = PathJoinSubstitution([FindPackageShare('rov_ctrl_sys'), 'config'])
     fullscreen = LaunchConfiguration('fullscreen')
 
-    display_node = Node(
+    """display_node = Node(
         package='rov_ctrl_sys',
         executable='window',
         name='display',
@@ -45,11 +47,33 @@ def generate_launch_description():
             ('image_raw','image_uncompressed'),
         ],
 #         ros_arguments=['--log-level', 'debug'],
-    )
+    )"""
+    print(platform.machine())
+    extension = "x86_64"
+    architecture = platform.machine()
+    if architecture == 'aarch64' or architecture == 'arm64':
+        extension = "arm64"
 
     return LaunchDescription([
         DeclareLaunchArgument('fullscreen', default_value=fullscreen),
-        display_node,
+        #display_node,
+        ExecuteProcess(
+            # condition=IfCondition(
+            #     PythonExpression([
+            #         architecture,
+            #         ' == aarch64',
+            #         ' or ',
+            #         architecture,
+            #         ' == arm64'
+            #     ])
+            # ),
+            cmd=[[
+                '~/Underwater-Robotics-Current/underwater-robotics-groundstation/exports/GroundstationUI.' + extension + ' -- ',
+                # Add remap arguments here with "--remap_from:remap_to"
+                #example: '--/keyboard_to_servo:/ground/keyboard_to_servo ',
+            ]],
+            shell=True
+        ),
         Node(
             package='rov_ctrl_sys',
             executable='keyboard_to_servo',
@@ -79,21 +103,21 @@ def generate_launch_description():
 #             ],
 #             output='log',
 #         ),
-        RegisterEventHandler(
-            OnProcessExit(
-                target_action=display_node,
-                on_exit=[
-                    LogInfo(msg=('User closed the display window')),
-                    EmitEvent(event=Shutdown(
-                        reason='Display closed'))
-                ]
-            )
-        ),
-        RegisterEventHandler(
-            OnShutdown(
-                on_shutdown=[LogInfo(
-                    msg=['Launch was asked to shutdown: ', LocalSubstitution('event.reason')]
-                )]
-            )
-        ),
+        # RegisterEventHandler(
+        #     OnProcessExit(
+        #         target_action=display_node,
+        #         on_exit=[
+        #             LogInfo(msg=('User closed the display window')),
+        #             EmitEvent(event=Shutdown(
+        #                 reason='Display closed'))
+        #         ]
+        #     )
+        # ),
+        # RegisterEventHandler(
+        #     OnShutdown(
+        #         on_shutdown=[LogInfo(
+        #             msg=['Launch was asked to shutdown: ', LocalSubstitution('event.reason')]
+        #         )]
+        #     )
+        # ),
     ])

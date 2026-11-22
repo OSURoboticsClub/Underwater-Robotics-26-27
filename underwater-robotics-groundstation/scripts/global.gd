@@ -12,10 +12,18 @@ var topic_mappings : Dictionary[String, String] = {
 
 func _ready() -> void:
 	# Read remappings from a file
-	var remappings = load_from_file().split("\n",false)
+	var remappings: PackedStringArray = load_from_file().split("\n",false)
+	
+	# Override with cmdline args
+	var args = OS.get_cmdline_user_args()
+	for a in args:
+		a = a.trim_prefix("--")
+	remappings = remappings + args
+	print(typeof(remappings))
 	for remapping in remappings:
 		var parts = remapping.split(":")
 		topic_mappings[parts[0].strip_edges()] = parts[1].strip_edges()
+
 
 ## Get data from the saved file
 func load_from_file():
